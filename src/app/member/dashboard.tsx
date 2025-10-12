@@ -102,6 +102,8 @@ export default async function Dashboard() {
   console.log('🔵 Dashboard - bookings:', bookings);
   console.log('🔵 Dashboard - subscriptions:', subscriptions);
   console.log('🔵 Dashboard - payments:', payments);
+  console.log('🔵 Dashboard - user:', userWithLevel);
+  console.log('🔵 Dashboard - activeSubscription:', activeSubscription);
 
   const activeSubscription = (subscriptions as SDBSubscription[] || []).find((sub: SDBSubscription) => sub.status === 'ACTIVE');
   const upcomingBookings = (bookings as SDBBooking[] || []).filter((booking: SDBBooking) => 
