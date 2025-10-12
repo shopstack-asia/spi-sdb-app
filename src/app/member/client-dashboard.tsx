@@ -31,15 +31,27 @@ export default function ClientDashboard() {
       {
         id: "book-001",
         member_id: mockUser.id,
+        facility_id: "fac-mr-a",
         facility: {
           id: "fac-mr-a",
           name: "Meeting Room A",
-          type: "MEETING_ROOM"
+          type: "MEETING_ROOM",
+          capacity: 10,
+          description: "Spacious meeting room with projector",
+          hourly_rate: 1000,
+          currency: "THB",
+          is_active: true
         },
         booking_date: "2025-10-15",
         start_time: "10:00",
         end_time: "11:00",
-        status: "CONFIRMED"
+        status: "CONFIRMED",
+        total_cost: 1000,
+        currency: "THB",
+        purpose: "Business meeting",
+        visitors: [],
+        created_at: "2025-01-01T10:00:00Z",
+        updated_at: "2025-01-01T10:00:00Z"
       }
     ];
 
@@ -47,11 +59,18 @@ export default function ClientDashboard() {
       {
         id: "sub-001",
         member_id: mockUser.id,
+        package_id: "pkg-premium",
         package: {
           id: "pkg-premium",
           name: "Premium Vault Package",
+          description: "Premium vault access with meeting room privileges",
           price: 12000,
-          currency: "THB"
+          currency: "THB",
+          duration_months: 12,
+          features: ["Vault Access", "Meeting Room", "Priority Support"],
+          max_meeting_hours: 20,
+          max_vault_access: 10,
+          is_active: true
         },
         start_date: "2025-01-01T00:00:00Z",
         end_date: "2026-01-01T00:00:00Z",
@@ -64,12 +83,14 @@ export default function ClientDashboard() {
       {
         id: "pay-001",
         member_id: mockUser.id,
+        subscription_id: "sub-001",
         amount: 12000,
         currency: "THB",
-        payment_date: "2025-01-01T10:30:00Z",
-        description: "Premium Vault Package Renewal",
+        payment_method: "CREDIT_CARD",
         status: "COMPLETED",
-        payment_method: "Credit Card"
+        transaction_id: "txn-001",
+        payment_date: "2025-01-01T10:30:00Z",
+        description: "Premium Vault Package Renewal"
       }
     ];
 
