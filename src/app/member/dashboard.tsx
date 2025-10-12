@@ -13,14 +13,14 @@ export default async function Dashboard() {
   const user = await getCurrentUser();
   console.log('🔵 Dashboard - User:', user);
   
-  // Simple test first - show regardless of user
-  return (
-    <div style={{ backgroundColor: '#0a1a2f', color: 'white', minHeight: '100vh', padding: '2rem' }}>
-      <h1 style={{ color: 'white', fontSize: '2rem' }}>Dashboard Test</h1>
-      <p style={{ color: 'white' }}>If you can see this, the component is working!</p>
-      <p style={{ color: 'white' }}>User: {user ? JSON.stringify(user) : 'No user data'}</p>
-    </div>
-  );
+  // Show dashboard with user data
+  if (!user) {
+    return (
+      <div style={{ backgroundColor: '#0a1a2f', color: 'white', minHeight: '100vh', padding: '2rem' }}>
+        <h1 style={{ color: 'white', fontSize: '2rem' }}>Please log in to view your dashboard.</h1>
+      </div>
+    );
+  }
 
   // Add mock user level
   const userWithLevel = {
