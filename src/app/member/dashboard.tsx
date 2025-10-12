@@ -7,16 +7,20 @@ import Link from 'next/link';
 import { SDBBooking, SDBSubscription, SDBPayment } from '@/types';
 
 export default async function Dashboard() {
+  console.log('🔵 Dashboard - Starting render');
+  
   // Get user data from server-side
   const user = await getCurrentUser();
+  console.log('🔵 Dashboard - User:', user);
   
-  if (!user) {
-    return (
-      <div className="text-center py-12">
-        <div className="text-white">Please log in to view your dashboard.</div>
-      </div>
-    );
-  }
+  // Simple test first - show regardless of user
+  return (
+    <div style={{ backgroundColor: '#0a1a2f', color: 'white', minHeight: '100vh', padding: '2rem' }}>
+      <h1 style={{ color: 'white', fontSize: '2rem' }}>Dashboard Test</h1>
+      <p style={{ color: 'white' }}>If you can see this, the component is working!</p>
+      <p style={{ color: 'white' }}>User: {user ? JSON.stringify(user) : 'No user data'}</p>
+    </div>
+  );
 
   // Add mock user level
   const userWithLevel = {

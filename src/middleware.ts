@@ -6,6 +6,8 @@ export function middleware(request: NextRequest) {
   
   console.log('🔵 Middleware - Path:', pathname);
   console.log('🔵 Middleware - All cookies:', request.cookies.getAll().map(c => c.name));
+  console.log('🔵 Middleware - User-Agent:', request.headers.get('user-agent'));
+  console.log('🔵 Middleware - Referer:', request.headers.get('referer'));
   
   // Public routes that don't require authentication
   const publicRoutes = [

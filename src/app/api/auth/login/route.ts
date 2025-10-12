@@ -44,6 +44,8 @@ export async function POST(request: NextRequest) {
           maxAge: 60 * 60 * 24 * 7, // 7 days
         });
         console.log('🔵 Set user_data cookie:', loginData.profile);
+      } else {
+        console.log('🔴 No profile data in login response');
       }
 
       console.log('🟢 Login successful, cookies set');
