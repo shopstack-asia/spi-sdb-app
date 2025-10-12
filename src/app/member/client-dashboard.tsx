@@ -1,0 +1,214 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Shield, Calendar, CreditCard, Settings, Plus, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { SDBBooking, SDBSubscription, SDBPayment } from '@/types';
+
+interface User {
+  id: string;
+  first_name: string;
+  member_level: string;
+}
+
+export default function ClientDashboard() {
+  const [user, setUser] = useState<User | null>(null);
+  const [bookings, setBookings] = useState<SDBBooking[]>([]);
+  const [subscriptions, setSubscriptions] = useState<SDBSubscription[]>([]);
+  const [payments, setPayments] = useState<SDBPayment[]>([]);
+
+  useEffect(() => {
+    // Mock data for demonstration - only essential fields
+    const mockUser: User = {
+      id: "test-user-id",
+      first_name: "Test",
+      member_level: "Gold Member"
+    };
+
+    const mockBookings: SDBBooking[] = [
+      {
+        id: "book-001",
+        member_id: mockUser.id,
+        facility: {
+          id: "fac-mr-a",
+          name: "Meeting Room A",
+          type: "MEETING_ROOM"
+        },
+        booking_date: "2025-10-15",
+        start_time: "10:00",
+        end_time: "11:00",
+        status: "CONFIRMED"
+      }
+    ];
+
+    const mockSubscriptions: SDBSubscription[] = [
+      {
+        id: "sub-001",
+        member_id: mockUser.id,
+        package: {
+          id: "pkg-premium",
+          name: "Premium Vault Package",
+          price: 12000,
+          currency: "THB"
+        },
+        start_date: "2025-01-01T00:00:00Z",
+        end_date: "2026-01-01T00:00:00Z",
+        status: "ACTIVE",
+        auto_renew: true
+      }
+    ];
+
+    const mockPayments: SDBPayment[] = [
+      {
+        id: "pay-001",
+        member_id: mockUser.id,
+        amount: 12000,
+        currency: "THB",
+        payment_date: "2025-01-01T10:30:00Z",
+        description: "Premium Vault Package Renewal",
+        status: "COMPLETED",
+        payment_method: "Credit Card"
+      }
+    ];
+
+    setUser(mockUser);
+    setBookings(mockBookings);
+    setSubscriptions(mockSubscriptions);
+    setPayments(mockPayments);
+  }, []);
+
+  if (!user) {
+    return (
+      <div style={{ backgroundColor: '#0a1a2f', color: 'white', minHeight: '100vh', padding: '2rem' }}>
+        <h1 style={{ color: 'white', fontSize: '2rem' }}>Loading...</h1>
+      </div>
+    );
+  }
+
+  const activeSubscription = subscriptions.find(sub => sub.status === 'ACTIVE');
+  const upcomingBookings = bookings.filter(booking => 
+    new Date(booking.booking_date) >= new Date()
+  );
+
+  return (
+    <div style={{ backgroundColor: '#0a1a2f', color: 'white', minHeight: '100vh' }}>
+      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '2rem 1rem' }}>
+        {/* Welcome Section */}
+        <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ color: 'white', fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+            Welcome back, {user.first_name}!
+          </h1>
+          <p style={{ color: '#e5e7eb' }}>
+            Manage your safe deposit box membership and bookings
+          </p>
+        </div>
+
+        {/* Quick Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
+            <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Membership Status</CardTitle>
+              <Shield style={{ height: '1rem', width: '1rem', color: '#d4af37' }} />
+            </CardHeader>
+            <CardContent>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d4af37' }}>{user.member_level}</div>
+              <p style={{ fontSize: '0.75rem', color: '#e5e7eb' }}>
+                {activeSubscription ? `Expires: ${new Date(activeSubscription.end_date).toLocaleDateString()}` : 'No active subscription'}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
+            <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Active Bookings</CardTitle>
+              <Calendar style={{ height: '1rem', width: '1rem', color: '#d4af37' }} />
+            </CardHeader>
+            <CardContent>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d4af37' }}>{upcomingBookings.length}</div>
+              <p style={{ fontSize: '0.75rem', color: '#e5e7eb' }}>
+                Upcoming meetings
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
+            <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Next Payment</CardTitle>
+              <CreditCard style={{ height: '1rem', width: '1rem', color: '#d4af37' }} />
+            </CardHeader>
+            <CardContent>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d4af37' }}>
+                {activeSubscription ? `${activeSubscription.package.price.toLocaleString()} THB` : 'N/A'}
+              </div>
+              <p style={{ fontSize: '0.75rem', color: '#e5e7eb' }}>
+                {activeSubscription ? `Due: ${new Date(activeSubscription.end_date).toLocaleDateString()}` : 'No active subscription'}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', marginBottom: '1.5rem' }}>
+          <CardHeader>
+            <CardTitle style={{ color: 'white' }}>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <Link href="/booking">
+              <button style={{ 
+                width: '100%', 
+                backgroundColor: '#d4af37', 
+                color: '#0a1a2f', 
+                padding: '0.75rem 1rem', 
+                borderRadius: '0.375rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                border: 'none',
+                cursor: 'pointer'
+              }}>
+                <Plus style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
+                Book Facility
+              </button>
+            </Link>
+            <Link href="/subscription">
+              <button style={{ 
+                width: '100%', 
+                border: '1px solid #e5e7eb', 
+                color: '#e5e7eb', 
+                padding: '0.75rem 1rem', 
+                borderRadius: '0.375rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                backgroundColor: 'transparent',
+                cursor: 'pointer'
+              }}>
+                <Settings style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
+                Manage Subscription
+              </button>
+            </Link>
+            <Link href="/payment">
+              <button style={{ 
+                width: '100%', 
+                border: '1px solid #e5e7eb', 
+                color: '#e5e7eb', 
+                padding: '0.75rem 1rem', 
+                borderRadius: '0.375rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                backgroundColor: 'transparent',
+                cursor: 'pointer'
+              }}>
+                <CreditCard style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
+                Payment History
+              </button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
