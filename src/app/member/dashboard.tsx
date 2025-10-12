@@ -109,8 +109,22 @@ export default async function Dashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-spi-navy text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div 
+      className="min-h-screen bg-spi-navy text-white" 
+      style={{ 
+        backgroundColor: '#0a1a2f', 
+        color: 'white',
+        minHeight: '100vh'
+      }}
+    >
+      <div 
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+        style={{
+          maxWidth: '80rem',
+          margin: '0 auto',
+          padding: '2rem 1rem'
+        }}
+      >
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
