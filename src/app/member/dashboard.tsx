@@ -18,12 +18,86 @@ export default async function Dashboard() {
     );
   }
 
-  // Fetch data using server actions
-  const [bookings, subscriptions, payments] = await Promise.all([
-    getBookings(user.id).catch(() => []),
-    getSubscriptions(user.id).catch(() => []),
-    getPayments(user.id).catch(() => [])
-  ]);
+  // Add mock user level
+  const userWithLevel = {
+    ...user,
+    member_level: "Gold Member"
+  };
+
+  // Mock data for demonstration
+  const mockBookings = [
+    {
+      id: "book-001",
+      member_id: user.id,
+      facility: {
+        id: "fac-mr-a",
+        name: "Meeting Room A",
+        type: "MEETING_ROOM"
+      },
+      booking_date: "2025-10-15",
+      start_time: "10:00",
+      end_time: "11:00",
+      status: "CONFIRMED"
+    },
+    {
+      id: "book-002", 
+      member_id: user.id,
+      facility: {
+        id: "fac-pv-1",
+        name: "Private Vault Room 1",
+        type: "PRIVATE_VAULT"
+      },
+      booking_date: "2025-10-20",
+      start_time: "14:00",
+      end_time: "15:30",
+      status: "PENDING"
+    }
+  ];
+
+  const mockSubscriptions = [
+    {
+      id: "sub-001",
+      member_id: user.id,
+      package: {
+        id: "pkg-premium",
+        name: "Premium Vault Package",
+        price: 12000,
+        currency: "THB"
+      },
+      start_date: "2025-01-01T00:00:00Z",
+      end_date: "2026-01-01T00:00:00Z",
+      status: "ACTIVE",
+      auto_renew: true
+    }
+  ];
+
+  const mockPayments = [
+    {
+      id: "pay-001",
+      member_id: user.id,
+      amount: 12000,
+      currency: "THB",
+      payment_date: "2025-01-01T10:30:00Z",
+      description: "Premium Vault Package Renewal",
+      status: "COMPLETED",
+      payment_method: "Credit Card"
+    },
+    {
+      id: "pay-002",
+      member_id: user.id,
+      amount: 500,
+      currency: "THB", 
+      payment_date: "2025-09-10T14:00:00Z",
+      description: "Meeting Room A Booking",
+      status: "COMPLETED",
+      payment_method: "Bank Transfer"
+    }
+  ];
+
+  // Use mock data instead of API calls
+  const bookings = mockBookings;
+  const subscriptions = mockSubscriptions;
+  const payments = mockPayments;
 
   console.log('🔵 Dashboard - bookings:', bookings);
   console.log('🔵 Dashboard - subscriptions:', subscriptions);
@@ -40,7 +114,7 @@ export default async function Dashboard() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
-            Welcome back, {user.first_name}!
+            Welcome back, {userWithLevel.first_name}!
           </h1>
           <p className="text-spi-silver">
             Manage your safe deposit box membership and bookings
@@ -55,7 +129,7 @@ export default async function Dashboard() {
             <Shield className="h-4 w-4 text-spi-gold" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-spi-gold">{user.member_level}</div>
+            <div className="text-2xl font-bold text-spi-gold">{userWithLevel.member_level}</div>
             <p className="text-xs text-spi-silver">
               {activeSubscription ? `Expires: ${new Date(activeSubscription.end_date).toLocaleDateString()}` : 'No active subscription'}
             </p>
@@ -99,21 +173,21 @@ export default async function Dashboard() {
             <CardHeader>
               <CardTitle className="text-white">Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-8">
               <Link href="/booking">
-                <button className="w-full bg-spi-gold hover:bg-spi-gold/90 text-spi-navy px-4 py-2 rounded-md flex items-center justify-center">
+                <button className="w-full bg-spi-gold hover:bg-spi-gold/90 text-spi-navy px-4 py-3 rounded-md flex items-center justify-center mb-2">
                   <Plus className="h-4 w-4 mr-2" />
                   Book Facility
                 </button>
               </Link>
               <Link href="/subscription">
-                <button className="w-full border border-spi-silver text-spi-silver hover:bg-spi-silver/10 px-4 py-2 rounded-md flex items-center justify-center">
+                <button className="w-full border border-spi-silver text-spi-silver hover:bg-spi-silver/10 px-4 py-3 rounded-md flex items-center justify-center mb-2">
                   <Settings className="h-4 w-4 mr-2" />
                   Manage Subscription
                 </button>
               </Link>
               <Link href="/payment">
-                <button className="w-full border border-spi-silver text-spi-silver hover:bg-spi-silver/10 px-4 py-2 rounded-md flex items-center justify-center">
+                <button className="w-full border border-spi-silver text-spi-silver hover:bg-spi-silver/10 px-4 py-3 rounded-md flex items-center justify-center">
                   <CreditCard className="h-4 w-4 mr-2" />
                   Payment History
                 </button>

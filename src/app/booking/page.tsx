@@ -93,7 +93,7 @@ export default function BookingPage() {
   const [facilities, setFacilities] = useState<SDBFacility[]>([]);
   const [bookings, setBookings] = useState<SDBBooking[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [selectedFacility, setSelectedFacility] = useState<string>("");
+  const [selectedFacility, setSelectedFacility] = useState<string>("all");
   const [showCalendar, setShowCalendar] = useState(false);
 
   useEffect(() => {
@@ -130,9 +130,9 @@ export default function BookingPage() {
     }
   };
 
-  const filteredBookings = selectedFacility 
-    ? bookings.filter(booking => booking.facility_id === selectedFacility)
-    : bookings;
+  const filteredBookings = selectedFacility === "all"
+    ? bookings
+    : bookings.filter(booking => booking.facility_id === selectedFacility);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark">
@@ -181,7 +181,7 @@ export default function BookingPage() {
                       <SelectValue placeholder="All facilities" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All facilities</SelectItem>
+                      <SelectItem value="all">All facilities</SelectItem>
                       {facilities.map((facility) => (
                         <SelectItem key={facility.id} value={facility.id}>
                           {facility.name}
@@ -315,7 +315,7 @@ export default function BookingPage() {
                   <CalendarIcon className="h-12 w-12 text-spi-silver mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-white mb-2">No bookings found</h3>
                   <p className="text-spi-silver mb-6">
-                    {selectedFacility 
+                    {selectedFacility !== "all"
                       ? "No bookings found for the selected facility and date."
                       : "You don't have any bookings yet."
                     }

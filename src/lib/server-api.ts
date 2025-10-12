@@ -121,7 +121,18 @@ export class ServerCSAPI {
       data: data
     });
 
-    const headers = await this.getAuthHeaders();
+    // Register endpoint needs Basic Auth (API Key + Secret Key)
+    const appKey = process.env.CS_APP_KEY;
+    const secretKey = process.env.CS_SECRET_KEY;
+    const basicAuth = appKey && secretKey 
+      ? `Basic ${Buffer.from(`${appKey}:${secretKey}`).toString('base64')}`
+      : null;
+
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(basicAuth && { Authorization: basicAuth }),
+    };
+    
     console.log('🔵 Headers:', headers);
 
     try {
