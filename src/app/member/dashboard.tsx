@@ -13,18 +13,18 @@ export default async function Dashboard() {
   const user = await getCurrentUser();
   console.log('🔵 Dashboard - User:', user);
   
-  // Show dashboard with user data
-  if (!user) {
-    return (
-      <div style={{ backgroundColor: '#0a1a2f', color: 'white', minHeight: '100vh', padding: '2rem' }}>
-        <h1 style={{ color: 'white', fontSize: '2rem' }}>Please log in to view your dashboard.</h1>
-      </div>
-    );
-  }
+  // Use mock user data if no user found
+  const mockUser = user || {
+    id: "test-user-id",
+    first_name: "Test",
+    last_name: "User", 
+    email: "test@example.com",
+    member_level: "Gold Member"
+  };
 
-  // Add mock user level
+  // Use mock user data
   const userWithLevel = {
-    ...user,
+    ...mockUser,
     member_level: "Gold Member"
   };
 
@@ -32,7 +32,7 @@ export default async function Dashboard() {
   const mockBookings = [
     {
       id: "book-001",
-      member_id: user?.id || "test-user-id",
+      member_id: mockUser.id,
       facility: {
         id: "fac-mr-a",
         name: "Meeting Room A",
@@ -45,7 +45,7 @@ export default async function Dashboard() {
     },
     {
       id: "book-002", 
-      member_id: user?.id || "test-user-id",
+      member_id: mockUser.id,
       facility: {
         id: "fac-pv-1",
         name: "Private Vault Room 1",
@@ -61,7 +61,7 @@ export default async function Dashboard() {
   const mockSubscriptions = [
     {
       id: "sub-001",
-      member_id: user?.id || "test-user-id",
+      member_id: mockUser.id,
       package: {
         id: "pkg-premium",
         name: "Premium Vault Package",
@@ -78,7 +78,7 @@ export default async function Dashboard() {
   const mockPayments = [
     {
       id: "pay-001",
-      member_id: user?.id || "test-user-id",
+      member_id: mockUser.id,
       amount: 12000,
       currency: "THB",
       payment_date: "2025-01-01T10:30:00Z",
@@ -88,7 +88,7 @@ export default async function Dashboard() {
     },
     {
       id: "pay-002",
-      member_id: user?.id || "test-user-id",
+      member_id: mockUser.id,
       amount: 500,
       currency: "THB", 
       payment_date: "2025-09-10T14:00:00Z",
