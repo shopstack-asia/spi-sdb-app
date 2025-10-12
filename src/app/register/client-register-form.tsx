@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 
 const registrationSchema = z.object({
   member_type: z.enum(["INDIVIDUAL", "CORPORATE"], {
-    required_error: "Please select a member type.",
+    message: "Please select a member type.",
   }),
   first_name: z.string().min(2, "First name must be at least 2 characters"),
   last_name: z.string().min(2, "Last name must be at least 2 characters"),

@@ -13,8 +13,8 @@ export async function loginAction(formData: FormData) {
   try {
     const response = await ServerCSAPI.login({ email, password });
     
-    if (response.success && (response.data as LoginResponse).token) {
-      const loginData = response.data as LoginResponse;
+    if (response.success && (response.data as unknown as LoginResponse).token) {
+      const loginData = response.data as unknown as LoginResponse;
         // Set access token cookie
         const cookieStore = await cookies();
         cookieStore.set('access_token', loginData.token, {
@@ -70,16 +70,16 @@ export async function registerAction(formData: FormData) {
     if (response.success) {
       console.log('🟢 Registration successful');
       revalidatePath('/register');
-      return { success: true, message: 'Registration successful! Please check your email for verification.' };
+      redirect('/login?message=registration-success');
     } else {
       console.log('🔴 Registration failed');
       revalidatePath('/register');
-      return { success: false, error: 'Registration failed. Please try again.' };
+      redirect('/register?error=registration-failed');
     }
   } catch (error) {
     console.error('🔴 Registration error:', error);
     revalidatePath('/register');
-    return { success: false, error: 'Registration failed. Please try again.' };
+    redirect('/register?error=registration-failed');
   }
 }
 

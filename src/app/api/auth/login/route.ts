@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ServerCSAPI } from '@/lib/server-api';
 
+interface LoginResponseData {
+  token: string;
+  profile: Record<string, unknown>;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
@@ -19,25 +24,26 @@ export async function POST(request: NextRequest) {
       });
 
       // Set access token cookie (for Bearer token authentication)
-      if (response.data.token) {
-        nextResponse.cookies.set('access_token', response.data.token, {
+      const loginData = response.data as unknown as LoginResponseData;
+      if (loginData.token) {
+        nextResponse.cookies.set('access_token', loginData.token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
           maxAge: 60 * 60 * 24 * 7, // 7 days
         });
-        console.log('🔵 Set access_token cookie:', response.data.token.substring(0, 20) + '...');
+        console.log('🔵 Set access_token cookie:', loginData.token.substring(0, 20) + '...');
       }
 
       // Set user data cookie
-      if (response.data.profile) {
-        nextResponse.cookies.set('user_data', JSON.stringify(response.data.profile), {
+      if (loginData.profile) {
+        nextResponse.cookies.set('user_data', JSON.stringify(loginData.profile), {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
           maxAge: 60 * 60 * 24 * 7, // 7 days
         });
-        console.log('🔵 Set user_data cookie:', response.data.profile);
+        console.log('🔵 Set user_data cookie:', loginData.profile);
       }
 
       console.log('🟢 Login successful, cookies set');
