@@ -32,7 +32,7 @@ export default async function Dashboard() {
   const mockBookings = [
     {
       id: "book-001",
-      member_id: user.id,
+      member_id: user?.id || "test-user-id",
       facility: {
         id: "fac-mr-a",
         name: "Meeting Room A",
@@ -45,7 +45,7 @@ export default async function Dashboard() {
     },
     {
       id: "book-002", 
-      member_id: user.id,
+      member_id: user?.id || "test-user-id",
       facility: {
         id: "fac-pv-1",
         name: "Private Vault Room 1",
@@ -61,7 +61,7 @@ export default async function Dashboard() {
   const mockSubscriptions = [
     {
       id: "sub-001",
-      member_id: user.id,
+      member_id: user?.id || "test-user-id",
       package: {
         id: "pkg-premium",
         name: "Premium Vault Package",
@@ -78,7 +78,7 @@ export default async function Dashboard() {
   const mockPayments = [
     {
       id: "pay-001",
-      member_id: user.id,
+      member_id: user?.id || "test-user-id",
       amount: 12000,
       currency: "THB",
       payment_date: "2025-01-01T10:30:00Z",
@@ -88,7 +88,7 @@ export default async function Dashboard() {
     },
     {
       id: "pay-002",
-      member_id: user.id,
+      member_id: user?.id || "test-user-id",
       amount: 500,
       currency: "THB", 
       payment_date: "2025-09-10T14:00:00Z",
@@ -151,7 +151,7 @@ export default async function Dashboard() {
           <CardContent>
             <div className="text-2xl font-bold text-spi-gold">{userWithLevel.member_level}</div>
             <p className="text-xs text-spi-silver">
-              {activeSubscription ? `Expires: ${new Date(activeSubscription.end_date).toLocaleDateString()}` : 'No active subscription'}
+              {activeSubscription ? `Expires: ${new Date(activeSubscription?.end_date || '').toLocaleDateString()}` : 'No active subscription'}
             </p>
           </CardContent>
         </Card>
@@ -176,10 +176,10 @@ export default async function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-spi-gold">
-              {activeSubscription ? `${activeSubscription.package.price.toLocaleString()} THB` : 'N/A'}
+              {activeSubscription ? `${activeSubscription?.package?.price?.toLocaleString() || '0'} THB` : 'N/A'}
             </div>
             <p className="text-xs text-spi-silver">
-              {activeSubscription ? `Due: ${new Date(activeSubscription.end_date).toLocaleDateString()}` : 'No active subscription'}
+              {activeSubscription ? `Due: ${new Date(activeSubscription?.end_date || '').toLocaleDateString()}` : 'No active subscription'}
             </p>
           </CardContent>
         </Card>
@@ -225,21 +225,21 @@ export default async function Dashboard() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-spi-silver">Package:</span>
-                    <span className="text-white font-medium">{activeSubscription.package.name}</span>
+                    <span className="text-white font-medium">{activeSubscription?.package?.name || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-spi-silver">Status:</span>
                     <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                      {activeSubscription.status}
+                      {activeSubscription?.status || 'N/A'}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-spi-silver">Expires:</span>
-                    <span className="text-white">{new Date(activeSubscription.end_date).toLocaleDateString()}</span>
+                    <span className="text-white">{new Date(activeSubscription?.end_date || '').toLocaleDateString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-spi-silver">Auto Renew:</span>
-                    <span className="text-white">{activeSubscription.auto_renew ? 'Yes' : 'No'}</span>
+                    <span className="text-white">{activeSubscription?.auto_renew ? 'Yes' : 'No'}</span>
                   </div>
                 </div>
               </CardContent>
