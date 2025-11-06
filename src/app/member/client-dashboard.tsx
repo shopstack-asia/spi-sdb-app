@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Shield, Calendar, CreditCard, Settings, Plus, ArrowRight } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Shield, Calendar, CreditCard, Settings, Plus, ArrowRight, Coins, TrendingUp, TrendingDown } from 'lucide-react';
 import Link from 'next/link';
 import { SDBBooking, SDBSubscription, SDBPayment } from '@/types';
 
@@ -13,11 +14,22 @@ interface User {
   member_level: string;
 }
 
+interface PointHistory {
+  id: string;
+  type: 'EARN' | 'REDEEM';
+  points: number;
+  description: string;
+  date: string;
+}
+
 export default function ClientDashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [bookings, setBookings] = useState<SDBBooking[]>([]);
   const [subscriptions, setSubscriptions] = useState<SDBSubscription[]>([]);
   const [payments, setPayments] = useState<SDBPayment[]>([]);
+  const [totalPoints, setTotalPoints] = useState<number>(0);
+  const [pointHistory, setPointHistory] = useState<PointHistory[]>([]);
+  const [showPointHistory, setShowPointHistory] = useState(false);
 
   useEffect(() => {
     // Mock data for demonstration - only essential fields
@@ -94,10 +106,45 @@ export default function ClientDashboard() {
       }
     ];
 
+    // Mock point data
+    const mockTotalPoints = 1250;
+    const mockPointHistory: PointHistory[] = [
+      {
+        id: 'ph-001',
+        type: 'EARN',
+        points: 100,
+        description: 'Monthly subscription bonus',
+        date: '2025-01-15T10:00:00Z'
+      },
+      {
+        id: 'ph-002',
+        type: 'EARN',
+        points: 50,
+        description: 'Facility booking reward',
+        date: '2025-01-10T14:30:00Z'
+      },
+      {
+        id: 'ph-003',
+        type: 'REDEEM',
+        points: -200,
+        description: 'Redeemed for discount voucher',
+        date: '2025-01-05T09:15:00Z'
+      },
+      {
+        id: 'ph-004',
+        type: 'EARN',
+        points: 300,
+        description: 'Welcome bonus',
+        date: '2025-01-01T08:00:00Z'
+      }
+    ];
+
     setUser(mockUser);
     setBookings(mockBookings);
     setSubscriptions(mockSubscriptions);
     setPayments(mockPayments);
+    setTotalPoints(mockTotalPoints);
+    setPointHistory(mockPointHistory);
   }, []);
 
   if (!user) {
@@ -168,6 +215,19 @@ export default function ClientDashboard() {
               </p>
             </CardContent>
           </Card>
+
+          <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
+            <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Total Points</CardTitle>
+              <Coins style={{ height: '1rem', width: '1rem', color: '#d4af37' }} />
+            </CardHeader>
+            <CardContent>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d4af37' }}>{totalPoints.toLocaleString()}</div>
+              <p style={{ fontSize: '0.75rem', color: '#e5e7eb' }}>
+                Available points
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Main Content Grid */}
@@ -230,6 +290,23 @@ export default function ClientDashboard() {
                     Payment History
                   </button>
                 </Link>
+                <button 
+                  onClick={() => setShowPointHistory(true)}
+                  style={{ 
+                    width: '100%', 
+                    border: '1px solid #e5e7eb', 
+                    color: '#e5e7eb', 
+                    padding: '0.75rem 1rem', 
+                    borderRadius: '0.375rem', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    backgroundColor: 'transparent',
+                    cursor: 'pointer'
+                  }}>
+                  <Coins style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
+                  Show Point History
+                </button>
               </CardContent>
             </Card>
 
@@ -371,6 +448,111 @@ export default function ClientDashboard() {
             </Card>
           </div>
         </div>
+
+        {/* Point History Dialog */}
+        <Dialog open={showPointHistory} onOpenChange={setShowPointHistory}>
+          <DialogContent className="bg-[#0a1a2f] border-[rgba(229,231,235,0.2)] text-white max-w-[600px]" style={{ backgroundColor: '#0a1a2f', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', maxWidth: '600px' }}>
+            <DialogHeader>
+              <DialogTitle style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>Point History</DialogTitle>
+              <DialogDescription style={{ color: '#e5e7eb', marginTop: '0.5rem' }}>
+                View your total points, earn, and redeem history
+              </DialogDescription>
+            </DialogHeader>
+            <div style={{ marginTop: '1.5rem' }}>
+              {/* Total Points Summary */}
+              <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', marginBottom: '1.5rem' }}>
+                <CardContent style={{ padding: '1.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>Total Points</p>
+                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#d4af37' }}>
+                        {totalPoints.toLocaleString()}
+                      </div>
+                    </div>
+                    <Coins style={{ height: '3rem', width: '3rem', color: '#d4af37' }} />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Point History List */}
+              <div style={{ marginTop: '1.5rem' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: '600', color: 'white', marginBottom: '1rem' }}>Transaction History</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
+                  {pointHistory.length > 0 ? (
+                    pointHistory.map((history) => (
+                      <div 
+                        key={history.id}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '1rem',
+                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                          borderRadius: '0.5rem',
+                          border: '1px solid rgba(229, 231, 235, 0.1)'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+                          <div style={{
+                            padding: '0.5rem',
+                            backgroundColor: history.type === 'EARN' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                            borderRadius: '0.5rem'
+                          }}>
+                            {history.type === 'EARN' ? (
+                              <TrendingUp style={{ height: '1.25rem', width: '1.25rem', color: '#4ade80' }} />
+                            ) : (
+                              <TrendingDown style={{ height: '1.25rem', width: '1.25rem', color: '#f87171' }} />
+                            )}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <h4 style={{ fontWeight: '500', color: 'white', marginBottom: '0.25rem' }}>
+                              {history.description}
+                            </h4>
+                            <p style={{ fontSize: '0.875rem', color: '#e5e7eb' }}>
+                              {new Date(history.date).toLocaleDateString()} • {new Date(history.date).toLocaleTimeString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div style={{ 
+                          fontSize: '1.125rem', 
+                          fontWeight: 'bold',
+                          color: history.type === 'EARN' ? '#4ade80' : '#f87171'
+                        }}>
+                          {history.type === 'EARN' ? '+' : ''}{history.points.toLocaleString()}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#e5e7eb' }}>
+                      <Coins style={{ height: '3rem', width: '3rem', color: '#e5e7eb', margin: '0 auto 1rem', opacity: 0.5 }} />
+                      <p>No point history available</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Summary Stats */}
+              <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+                <Card style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', color: 'white' }}>
+                  <CardContent style={{ padding: '1rem' }}>
+                    <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>Total Earned</p>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#4ade80' }}>
+                      +{pointHistory.filter(h => h.type === 'EARN').reduce((sum, h) => sum + h.points, 0).toLocaleString()}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: 'white' }}>
+                  <CardContent style={{ padding: '1rem' }}>
+                    <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>Total Redeemed</p>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#f87171' }}>
+                      {pointHistory.filter(h => h.type === 'REDEEM').reduce((sum, h) => sum + Math.abs(h.points), 0).toLocaleString()}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
