@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Shield, Calendar, CreditCard, Settings, Plus, ArrowRight, Coins, TrendingUp, TrendingDown } from 'lucide-react';
+import { Shield, Calendar, CreditCard, Settings, Plus, ArrowRight, Coins, TrendingUp, TrendingDown, Ticket } from 'lucide-react';
 import Link from 'next/link';
 import { SDBBooking, SDBSubscription, SDBPayment } from '@/types';
 
@@ -22,6 +22,19 @@ interface PointHistory {
   date: string;
 }
 
+interface Coupon {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  discount_type: 'PERCENTAGE' | 'FIXED';
+  discount_value: number;
+  status: 'AVAILABLE' | 'USED' | 'EXPIRED' | 'REDEEM';
+  expiry_date?: string;
+  used_date?: string;
+  redeem_date?: string;
+}
+
 export default function ClientDashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [bookings, setBookings] = useState<SDBBooking[]>([]);
@@ -30,6 +43,9 @@ export default function ClientDashboard() {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [pointHistory, setPointHistory] = useState<PointHistory[]>([]);
   const [showPointHistory, setShowPointHistory] = useState(false);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [showCoupons, setShowCoupons] = useState(false);
+  const [couponFilter, setCouponFilter] = useState<'ALL' | 'AVAILABLE' | 'USED' | 'EXPIRED' | 'REDEEM'>('ALL');
 
   useEffect(() => {
     // Mock data for demonstration - only essential fields
@@ -143,8 +159,65 @@ export default function ClientDashboard() {
     setBookings(mockBookings);
     setSubscriptions(mockSubscriptions);
     setPayments(mockPayments);
+    // Mock coupon data
+    const mockCoupons: Coupon[] = [
+      {
+        id: 'cpn-001',
+        code: 'WELCOME10',
+        name: 'Welcome Discount',
+        description: '10% off on first booking',
+        discount_type: 'PERCENTAGE',
+        discount_value: 10,
+        status: 'AVAILABLE',
+        expiry_date: '2025-12-31T23:59:59Z'
+      },
+      {
+        id: 'cpn-002',
+        code: 'SAVE500',
+        name: 'Save 500 THB',
+        description: '500 THB discount on subscription',
+        discount_type: 'FIXED',
+        discount_value: 500,
+        status: 'USED',
+        used_date: '2025-01-10T14:30:00Z',
+        expiry_date: '2025-06-30T23:59:59Z'
+      },
+      {
+        id: 'cpn-003',
+        code: 'SUMMER20',
+        name: 'Summer Sale',
+        description: '20% off on all bookings',
+        discount_type: 'PERCENTAGE',
+        discount_value: 20,
+        status: 'EXPIRED',
+        expiry_date: '2024-12-31T23:59:59Z'
+      },
+      {
+        id: 'cpn-004',
+        code: 'POINTS100',
+        name: 'Points Reward',
+        description: 'Redeemed with 100 points',
+        discount_type: 'FIXED',
+        discount_value: 200,
+        status: 'REDEEM',
+        redeem_date: '2025-01-05T09:15:00Z',
+        expiry_date: '2025-12-31T23:59:59Z'
+      },
+      {
+        id: 'cpn-005',
+        code: 'VIP15',
+        name: 'VIP Discount',
+        description: '15% off for VIP members',
+        discount_type: 'PERCENTAGE',
+        discount_value: 15,
+        status: 'AVAILABLE',
+        expiry_date: '2025-06-30T23:59:59Z'
+      }
+    ];
+
     setTotalPoints(mockTotalPoints);
     setPointHistory(mockPointHistory);
+    setCoupons(mockCoupons);
   }, []);
 
   if (!user) {
@@ -174,7 +247,7 @@ export default function ClientDashboard() {
         </div>
 
         {/* Quick Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
           <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
             <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Membership Status</CardTitle>
@@ -306,6 +379,23 @@ export default function ClientDashboard() {
                   }}>
                   <Coins style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
                   Show Point History
+                </button>
+                <button 
+                  onClick={() => setShowCoupons(true)}
+                  style={{ 
+                    width: '100%', 
+                    border: '1px solid #e5e7eb', 
+                    color: '#e5e7eb', 
+                    padding: '0.75rem 1rem', 
+                    borderRadius: '0.375rem', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    backgroundColor: 'transparent',
+                    cursor: 'pointer'
+                  }}>
+                  <Ticket style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
+                  My Coupon
                 </button>
               </CardContent>
             </Card>
@@ -546,6 +636,174 @@ export default function ClientDashboard() {
                     <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>Total Redeemed</p>
                     <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#f87171' }}>
                       {pointHistory.filter(h => h.type === 'REDEEM').reduce((sum, h) => sum + Math.abs(h.points), 0).toLocaleString()}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Coupon Dialog */}
+        <Dialog open={showCoupons} onOpenChange={setShowCoupons}>
+          <DialogContent className="bg-[#0a1a2f] border-[rgba(229,231,235,0.2)] text-white max-w-[700px]" style={{ backgroundColor: '#0a1a2f', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', maxWidth: '700px' }}>
+            <DialogHeader>
+              <DialogTitle style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>My Coupons</DialogTitle>
+              <DialogDescription style={{ color: '#e5e7eb', marginTop: '0.5rem' }}>
+                View and manage your coupons
+              </DialogDescription>
+            </DialogHeader>
+            <div style={{ marginTop: '1.5rem' }}>
+              {/* Filter Tabs */}
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                {(['ALL', 'AVAILABLE', 'USED', 'EXPIRED', 'REDEEM'] as const).map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => setCouponFilter(filter)}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      borderRadius: '0.375rem',
+                      border: '1px solid rgba(229, 231, 235, 0.2)',
+                      backgroundColor: couponFilter === filter ? '#d4af37' : 'transparent',
+                      color: couponFilter === filter ? '#0a1a2f' : '#e5e7eb',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem',
+                      fontWeight: couponFilter === filter ? '600' : '400'
+                    }}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+
+              {/* Coupon List */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '500px', overflowY: 'auto' }}>
+                {coupons.filter(coupon => couponFilter === 'ALL' || coupon.status === couponFilter).length > 0 ? (
+                  coupons
+                    .filter(coupon => couponFilter === 'ALL' || coupon.status === couponFilter)
+                    .map((coupon) => {
+                      const getStatusColor = (status: string) => {
+                        switch (status) {
+                          case 'AVAILABLE': return { bg: 'rgba(34, 197, 94, 0.2)', color: '#4ade80', border: 'rgba(34, 197, 94, 0.3)' };
+                          case 'USED': return { bg: 'rgba(156, 163, 175, 0.2)', color: '#9ca3af', border: 'rgba(156, 163, 175, 0.3)' };
+                          case 'EXPIRED': return { bg: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: 'rgba(239, 68, 68, 0.3)' };
+                          case 'REDEEM': return { bg: 'rgba(234, 179, 8, 0.2)', color: '#facc15', border: 'rgba(234, 179, 8, 0.3)' };
+                          default: return { bg: 'rgba(229, 231, 235, 0.2)', color: '#e5e7eb', border: 'rgba(229, 231, 235, 0.3)' };
+                        }
+                      };
+                      const statusColor = getStatusColor(coupon.status);
+                      
+                      return (
+                        <Card 
+                          key={coupon.id}
+                          style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                            border: `1px solid ${statusColor.border}`,
+                            borderRadius: '0.5rem',
+                            padding: '1rem'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: '1rem' }}>
+                            <div style={{ flex: 1 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                                <h4 style={{ fontWeight: '600', color: 'white', fontSize: '1rem' }}>{coupon.name}</h4>
+                                <Badge style={{
+                                  backgroundColor: statusColor.bg,
+                                  color: statusColor.color,
+                                  border: `1px solid ${statusColor.border}`,
+                                  fontSize: '0.75rem',
+                                  padding: '0.25rem 0.5rem'
+                                }}>
+                                  {coupon.status}
+                                </Badge>
+                              </div>
+                              <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>
+                                {coupon.description}
+                              </p>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                  <span style={{ fontSize: '0.875rem', color: '#e5e7eb', fontWeight: '600' }}>Code:</span>
+                                  <span style={{ 
+                                    fontSize: '0.875rem', 
+                                    color: '#d4af37', 
+                                    fontWeight: 'bold',
+                                    fontFamily: 'monospace',
+                                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                                    padding: '0.25rem 0.5rem',
+                                    borderRadius: '0.25rem'
+                                  }}>
+                                    {coupon.code}
+                                  </span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                  <span style={{ fontSize: '0.875rem', color: '#e5e7eb' }}>Discount:</span>
+                                  <span style={{ fontSize: '0.875rem', color: '#d4af37', fontWeight: '600' }}>
+                                    {coupon.discount_type === 'PERCENTAGE' 
+                                      ? `${coupon.discount_value}%` 
+                                      : `${coupon.discount_value} THB`}
+                                  </span>
+                                </div>
+                              </div>
+                              {coupon.expiry_date && (
+                                <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+                                  {coupon.status === 'EXPIRED' ? 'Expired' : 'Expires'}: {new Date(coupon.expiry_date).toLocaleDateString()}
+                                </p>
+                              )}
+                              {coupon.used_date && (
+                                <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+                                  Used: {new Date(coupon.used_date).toLocaleDateString()}
+                                </p>
+                              )}
+                              {coupon.redeem_date && (
+                                <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+                                  Redeemed: {new Date(coupon.redeem_date).toLocaleDateString()}
+                                </p>
+                              )}
+                            </div>
+                            <Ticket style={{ height: '2rem', width: '2rem', color: '#d4af37', opacity: 0.7 }} />
+                          </div>
+                        </Card>
+                      );
+                    })
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '2rem', color: '#e5e7eb' }}>
+                    <Ticket style={{ height: '3rem', width: '3rem', color: '#e5e7eb', margin: '0 auto 1rem', opacity: 0.5 }} />
+                    <p>No {couponFilter === 'ALL' ? '' : couponFilter.toLowerCase()} coupons available</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Summary Stats */}
+              <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
+                <Card style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', color: 'white' }}>
+                  <CardContent style={{ padding: '0.75rem' }}>
+                    <p style={{ fontSize: '0.75rem', color: '#e5e7eb', marginBottom: '0.25rem' }}>Available</p>
+                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#4ade80' }}>
+                      {coupons.filter(c => c.status === 'AVAILABLE').length}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card style={{ backgroundColor: 'rgba(156, 163, 175, 0.1)', border: '1px solid rgba(156, 163, 175, 0.3)', color: 'white' }}>
+                  <CardContent style={{ padding: '0.75rem' }}>
+                    <p style={{ fontSize: '0.75rem', color: '#e5e7eb', marginBottom: '0.25rem' }}>Used</p>
+                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#9ca3af' }}>
+                      {coupons.filter(c => c.status === 'USED').length}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: 'white' }}>
+                  <CardContent style={{ padding: '0.75rem' }}>
+                    <p style={{ fontSize: '0.75rem', color: '#e5e7eb', marginBottom: '0.25rem' }}>Expired</p>
+                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#f87171' }}>
+                      {coupons.filter(c => c.status === 'EXPIRED').length}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card style={{ backgroundColor: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)', color: 'white' }}>
+                  <CardContent style={{ padding: '0.75rem' }}>
+                    <p style={{ fontSize: '0.75rem', color: '#e5e7eb', marginBottom: '0.25rem' }}>Redeem</p>
+                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#facc15' }}>
+                      {coupons.filter(c => c.status === 'REDEEM').length}
                     </div>
                   </CardContent>
                 </Card>
