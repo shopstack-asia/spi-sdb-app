@@ -19,6 +19,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import logoDark from "@/../public/qv_logo_h_white_bk.png";
+
 const featureHighlights = [
   {
     title: "Tier IV Vault Architecture",
@@ -85,23 +87,22 @@ const membershipTiers = [
 export default function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-qv-midnight-gradient" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-1/2 translate-x-1/4 rounded-full bg-qv-gold-gradient opacity-20 blur-3xl lg:block" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/40" />
+      <div className="pointer-events-none absolute inset-y-0 right-[-20%] -z-10 hidden w-3/5 rounded-[18rem] bg-qv-gold-gradient opacity-30 blur-3xl lg:block" />
 
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-background/80 backdrop-blur-2xl">
+      <header className="sticky top-0 z-40 border-b border-qv-gold/30 bg-white/85 backdrop-blur-xl shadow-sm">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
-            <span className="relative flex h-12 w-36 items-center">
-              <Image
-                src="/qv_logo_white_bk.png"
-                alt="Quantum Vault"
-                fill
-                priority
-                className="object-contain"
-              />
-            </span>
+            <Image
+              src={logoDark}
+              alt="Quantum Vault"
+              width={160}
+              height={48}
+              priority
+              className="h-12 w-auto"
+            />
           </Link>
-          <div className="hidden items-center gap-10 text-xs uppercase tracking-[0.28em] text-muted-foreground/80 lg:flex">
+          <div className="hidden items-center gap-10 text-xs uppercase tracking-[0.28em] text-primary/90 lg:flex">
             <Link href="/subscription" className="transition hover:text-primary">
               Vault Suites
             </Link>
@@ -117,7 +118,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3">
             <Link href="/login">
-              <Button variant="ghost" size="sm" className="hidden lg:flex">
+              <Button variant="ghost" size="sm" className="hidden lg:flex text-primary hover:bg-qv-gold/20">
                 Client Login
               </Button>
             </Link>
@@ -133,21 +134,21 @@ export default function Home() {
           <div className="mx-auto flex max-w-7xl flex-col gap-16 px-6 py-24 lg:flex-row lg:items-center lg:py-32">
             <div className="flex-1 space-y-8">
               <div className="luxury-divider inline-flex flex-col gap-4">
-                <span className="font-primary text-xs text-qv-gold/80">
+                <span className="font-primary text-xs text-secondary">
                   Quantum Vault Corporate Private Banking
                 </span>
-                <h1 className="font-primary text-4xl leading-[1.1] tracking-[0.28em] text-secondary-foreground sm:text-5xl lg:text-[3.4rem]">
+                <h1 className="font-primary text-4xl leading-[1.08] tracking-[0.28em] text-primary sm:text-5xl lg:text-[3.4rem]">
                   Custody Without Compromise
                 </h1>
               </div>
-              <p className="max-w-2xl font-secondary text-lg text-muted-foreground/90">
+              <p className="max-w-2xl font-secondary text-lg text-muted-foreground">
                 Within Bangkok&apos;s most discreet vault, Quantum Vault orchestrates personalised custody suites, sovereign-grade security, and a concierge culture defined by silence and precision.
               </p>
               <div className="space-y-4">
-                <p className="font-primary text-sm tracking-[0.32em] text-qv-gold">
+                <p className="font-primary text-sm tracking-[0.32em] text-secondary">
                   Trust Beyond Time
                 </p>
-                <p className="font-secondary text-base text-muted-foreground">
+                <p className="font-secondary text-base text-muted-foreground/80">
                   ปกป้องเหนือกาลเวลา
                 </p>
               </div>
@@ -159,7 +160,7 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href="/booking">
-                  <Button variant="outline" size="lg" className="border-qv-gold/70 text-secondary-foreground">
+                  <Button variant="outline" size="lg" className="border-qv-gold/70 text-primary">
                     Schedule Private Tour
                   </Button>
                 </Link>
@@ -167,69 +168,69 @@ export default function Home() {
             </div>
 
             <div className="flex-1">
-              <div className="golden-outline relative overflow-hidden rounded-3xl border border-white/5 bg-surface/70 p-1 shadow-qv-soft backdrop-blur-xl">
-                <div className="relative overflow-hidden rounded-[1.4rem] border border-qv-chrome/30 bg-gradient-to-br from-[#112e47]/30 via-[#0E4066]/70 to-[#222221]/80 p-8">
+              <div className="golden-outline relative overflow-hidden rounded-3xl border border-qv-gold/30 bg-white/80 p-[0.35rem] shadow-qv-soft backdrop-blur-xl">
+                <div className="relative overflow-hidden rounded-[1.4rem] border border-qv-gold/30 bg-gradient-to-br from-[#f5f3ef] via-[#e6d9c2] to-[#d3be99] p-8">
                   <div className="flex flex-col gap-6">
                     <div className="flex items-center justify-between">
-                      <span className="font-primary text-[0.62rem] tracking-[0.3em] text-qv-gold/80">
+                      <span className="font-primary text-[0.62rem] tracking-[0.3em] text-primary/80">
                         Executive Briefing Capsule
                       </span>
-                      <ArrowRight className="h-4 w-4 text-qv-gold/70" />
+                      <ArrowRight className="h-4 w-4 text-secondary" />
                     </div>
                     <div className="space-y-3">
-                      <h2 className="font-primary text-xl tracking-[0.26em] text-secondary-foreground">
+                      <h2 className="font-primary text-xl tracking-[0.26em] text-primary">
                         Vault Intelligence
                       </h2>
-                      <p className="font-secondary text-sm text-muted-foreground/85">
+                      <p className="font-secondary text-sm text-muted-foreground/80">
                         Immersive biometric vestibules with dual-factor resonance scanning insulate your assets from future unknowns.
                       </p>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 text-xs uppercase tracking-[0.28em] text-muted-foreground/70">
-                      <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                        <span className="block font-primary text-[0.58rem]">Quantum Trace</span>
+                    <div className="grid grid-cols-2 gap-4 text-xs uppercase tracking-[0.28em] text-muted-foreground/80">
+                      <div className="rounded-xl border border-qv-gold/30 bg-white/70 p-4">
+                        <span className="block font-primary text-[0.58rem] text-primary/80">Quantum Trace</span>
                         <span className="mt-2 block font-secondary text-sm text-secondary-foreground">
                           24/7 Predictive Analytic
                         </span>
                       </div>
-                      <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                        <span className="block font-primary text-[0.58rem]">Dual Custody</span>
+                      <div className="rounded-xl border border-qv-gold/30 bg-white/70 p-4">
+                        <span className="block font-primary text-[0.58rem] text-primary/80">Dual Custody</span>
                         <span className="mt-2 block font-secondary text-sm text-secondary-foreground">
                           Sovereign Clearance
                         </span>
                       </div>
                     </div>
                   </div>
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0E4066]/60 via-transparent to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#8c7958]/20 via-transparent to-transparent" />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="border-y border-white/10 bg-surface/60">
+        <section className="border-y border-qv-gold/30 bg-white/70">
           <div className="mx-auto max-w-7xl px-6 py-20">
             <div className="luxury-divider text-center">
-              <h2 className="font-primary text-2xl tracking-[0.28em] text-secondary-foreground">
+              <h2 className="font-primary text-2xl tracking-[0.28em] text-primary">
                 Precision Meets Presence
               </h2>
-              <p className="mx-auto mt-6 max-w-3xl font-secondary text-base text-muted-foreground/85">
+              <p className="mx-auto mt-6 max-w-3xl font-secondary text-base text-muted-foreground/90">
                 Every interaction is orchestrated by former private banking specialists and security strategists, ensuring your collections, instruments, and archives remain impeccably preserved.
               </p>
             </div>
 
             <div className="mt-14 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {featureHighlights.map((feature) => (
-                <Card key={feature.title} className="group border-transparent bg-background/40">
+                <Card key={feature.title} className="group border-qv-gold/25 bg-white/75">
                   <CardHeader className="border-none px-7 pt-7">
-                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-qv-gold/40 bg-white/5 text-qv-gold">
+                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-qv-gold/40 bg-qv-gold/10 text-primary">
                       <feature.icon className="h-6 w-6" />
                     </span>
                   </CardHeader>
                   <CardContent className="space-y-3 px-7 pb-8">
-                    <CardTitle className="text-left text-sm text-secondary-foreground">
+                    <CardTitle className="text-left text-sm text-primary">
                       {feature.title}
                     </CardTitle>
-                    <CardDescription className="text-left text-sm text-muted-foreground/85">
+                    <CardDescription className="text-left text-sm text-muted-foreground/90">
                       {feature.description}
                     </CardDescription>
                   </CardContent>
@@ -239,17 +240,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-background/95">
+        <section className="bg-white/80">
           <div className="mx-auto max-w-7xl px-6 py-20">
             <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
               <div className="flex-1 space-y-8">
-                <span className="font-primary text-xs text-qv-gold/70">
+                <span className="font-primary text-xs text-secondary">
                   Membership Architecture
                 </span>
-                <h3 className="font-primary text-3xl tracking-[0.28em] text-secondary-foreground">
+                <h3 className="font-primary text-3xl tracking-[0.28em] text-primary">
                   Programmes Tailored to Legacy
                 </h3>
-                <p className="max-w-xl font-secondary text-base text-muted-foreground/85">
+                <p className="max-w-xl font-secondary text-base text-muted-foreground/90">
                   Quantum Vault curates multi-layered custody programmes that scale with dynastic estates, single-family offices, and sovereign portfolios.
                 </p>
               </div>
@@ -257,15 +258,15 @@ export default function Home() {
                 {membershipTiers.map((tier) => (
                   <div
                     key={tier.title}
-                    className="golden-outline rounded-2xl border border-white/5 bg-surface/80 p-6 shadow-qv-soft"
+                    className="golden-outline rounded-2xl border border-qv-gold/25 bg-white/80 p-6 shadow-qv-soft"
                   >
-                    <p className="font-primary text-xs tracking-[0.3em] text-qv-gold/80">
+                    <p className="font-primary text-xs tracking-[0.3em] text-secondary">
                       {tier.title}
                     </p>
-                    <p className="mt-3 font-secondary text-base text-secondary-foreground">
+                    <p className="mt-3 font-secondary text-base text-foreground">
                       {tier.summary}
                     </p>
-                    <p className="mt-2 font-secondary text-sm text-muted-foreground/75">
+                    <p className="mt-2 font-secondary text-sm text-muted-foreground/80">
                       {tier.detail}
                     </p>
                   </div>
@@ -275,16 +276,16 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="border-t border-white/10 bg-surface/70">
+        <section className="border-t border-qv-gold/30 bg-gradient-to-br from-white via-qv-ivory/85 to-qv-gold/30">
           <div className="mx-auto max-w-7xl px-6 py-20">
-            <div className="rounded-3xl border border-qv-gold/35 bg-gradient-to-br from-[#0E4066]/70 via-[#152f47]/80 to-[#222221]/80 p-10 text-center shadow-qv-soft">
-              <p className="font-primary text-sm tracking-[0.32em] text-qv-gold">
+            <div className="rounded-3xl border border-qv-gold/30 bg-white/80 p-10 text-center shadow-qv-soft">
+              <p className="font-primary text-sm tracking-[0.32em] text-secondary">
                 Discretion Engineered
               </p>
-              <h4 className="mt-6 font-primary text-2xl tracking-[0.3em] text-secondary-foreground">
+              <h4 className="mt-6 font-primary text-2xl tracking-[0.3em] text-primary">
                 Private viewings are curated after a confidential consultation with our custodial architects.
               </h4>
-              <p className="mt-6 font-secondary text-base text-muted-foreground/85">
+              <p className="mt-6 font-secondary text-base text-muted-foreground/90">
                 Arrange a nightfall immersion or schedule a daylight survey. Our team coordinates travel, compliance, and bespoke hospitality for every visitation.
               </p>
               <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -294,7 +295,7 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href="/login">
-                  <Button variant="ghost" size="lg" className="text-secondary-foreground">
+                  <Button variant="ghost" size="lg" className="text-primary hover:bg-qv-gold/20">
                     Client Entrance
                   </Button>
                 </Link>
@@ -304,27 +305,26 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-white/10 bg-background/90">
+      <footer className="border-t border-qv-gold/30 bg-white/85 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-12 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
-            <span className="relative flex h-8 w-28 items-center">
-              <Image
-                src="/qv_logo_white_bk.png"
-                alt="Quantum Vault"
-                fill
-                className="object-contain"
-              />
-            </span>
+            <Image
+              src={logoDark}
+              alt="Quantum Vault"
+              width={120}
+              height={32}
+              className="h-8 w-auto"
+            />
             <div>
-              <p className="font-primary text-[0.6rem] tracking-[0.3em] text-qv-gold">
+              <p className="font-primary text-[0.6rem] tracking-[0.3em] text-secondary">
                 Trust Beyond Time
               </p>
-              <p className="font-secondary text-xs text-muted-foreground/70">
+              <p className="font-secondary text-xs text-muted-foreground/80">
                 ปกป้องเหนือกาลเวลา
               </p>
             </div>
           </div>
-          <div className="space-y-1 text-right text-xs text-muted-foreground/70">
+          <div className="space-y-1 text-right text-xs text-muted-foreground/80">
             <p>© {new Date().getFullYear()} Quantum Vault Group Limited. All rights reserved.</p>
             <p>Charter Compliance • Private Banking Alliances • Sovereign Custody</p>
           </div>

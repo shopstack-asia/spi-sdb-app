@@ -132,9 +132,9 @@ export default function ClientRegisterForm() {
   };
 
   return (
-    <Card className="border-qv-chrome/30 bg-surface/85 text-foreground shadow-qv-soft">
+    <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
       <CardHeader className="space-y-3 text-center">
-        <CardTitle className="font-primary text-sm tracking-[0.3em] text-secondary-foreground">
+        <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
           Establish Membership
         </CardTitle>
         <CardDescription className="font-secondary text-xs text-muted-foreground/80">
@@ -165,12 +165,12 @@ export default function ClientRegisterForm() {
                     <SelectContent>
                       <SelectItem value="INDIVIDUAL">
                         <span className="flex items-center gap-2 font-secondary text-sm">
-                          <User className="h-4 w-4 text-qv-gold/70" /> Individual
+                          <User className="h-4 w-4 text-secondary" /> Individual
                         </span>
                       </SelectItem>
                       <SelectItem value="CORPORATE">
                         <span className="flex items-center gap-2 font-secondary text-sm">
-                          <Building2 className="h-4 w-4 text-qv-gold/70" /> Corporate
+                          <Building2 className="h-4 w-4 text-secondary" /> Corporate
                         </span>
                       </SelectItem>
                     </SelectContent>
@@ -217,7 +217,7 @@ export default function ClientRegisterForm() {
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                      <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
                       <Input type="email" placeholder="john.doe@example.com" className="pl-11" {...field} />
                     </div>
                   </FormControl>
@@ -234,7 +234,7 @@ export default function ClientRegisterForm() {
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                      <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
                       <Input type="tel" placeholder="+66 0000 0000" className="pl-11" {...field} />
                     </div>
                   </FormControl>
@@ -251,7 +251,7 @@ export default function ClientRegisterForm() {
                   <FormLabel>Secure Passphrase</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                      <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
                       <Input type="password" placeholder="********" className="pl-11" {...field} />
                     </div>
                   </FormControl>
@@ -269,7 +269,7 @@ export default function ClientRegisterForm() {
                     <FormLabel>Address</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <MapPin className="pointer-events-none absolute left-4 top-4 h-4 w-4 text-qv-gold/70" />
+                        <MapPin className="pointer-events-none absolute left-4 top-4 h-4 w-4 text-secondary" />
                         <Textarea placeholder="123 Private Vault Lane" className="pl-11" {...field} />
                       </div>
                     </FormControl>
@@ -328,7 +328,7 @@ export default function ClientRegisterForm() {
                       <FormLabel>Date of Birth</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <CalendarDays className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                          <CalendarDays className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
                           <Input type="date" className="pl-11" {...field} />
                         </div>
                       </FormControl>
@@ -344,7 +344,7 @@ export default function ClientRegisterForm() {
                       <FormLabel>Occupation</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Briefcase className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                          <Briefcase className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
                           <Input placeholder="Principal" className="pl-11" {...field} />
                         </div>
                       </FormControl>
@@ -364,7 +364,7 @@ export default function ClientRegisterForm() {
                     <FormLabel>Company Name</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Building2 className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                        <Building2 className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
                         <Input placeholder="Quantum Holdings" className="pl-11" {...field} />
                       </div>
                     </FormControl>

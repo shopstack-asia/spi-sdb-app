@@ -3,52 +3,52 @@
 @tailwind utilities;
 
 :root {
-  --background: 206 76% 8%;
-  --foreground: 38 23% 92%;
-  --surface: 206 64% 12%;
-  --surface-contrast: 38 23% 90%;
-  --card: 206 64% 12%;
-  --card-foreground: 38 23% 92%;
-  --popover: 206 64% 10%;
-  --popover-foreground: 38 23% 92%;
-  --primary: 206 76% 23%;
-  --primary-foreground: 38 23% 92%;
-  --secondary: 38 23% 45%;
-  --secondary-foreground: 206 76% 13%;
-  --muted: 200 3% 59%;
-  --muted-foreground: 38 10% 80%;
-  --accent: 38 23% 45%;
-  --accent-foreground: 206 76% 13%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 10%;
-  --border: 200 3% 59%;
-  --input: 200 3% 59%;
-  --ring: 38 23% 45%;
+  --background: 38 46% 96%;
+  --foreground: 206 64% 20%;
+  --surface: 38 36% 92%;
+  --surface-contrast: 0 0% 100%;
+  --card: 0 0% 100%;
+  --card-foreground: 206 64% 20%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 206 64% 20%;
+  --primary: 206 72% 32%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 38 30% 50%;
+  --secondary-foreground: 206 72% 24%;
+  --muted: 38 24% 88%;
+  --muted-foreground: 206 36% 32%;
+  --accent: 38 32% 66%;
+  --accent-foreground: 206 64% 20%;
+  --destructive: 0 72% 56%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 38 18% 78%;
+  --input: 38 18% 78%;
+  --ring: 206 72% 32%;
   --radius: 0.75rem;
   --font-primary: 'AUSGEN', 'Poppins', sans-serif;
   --font-secondary: 'Anantason Reno', 'Noto Sans Thai', sans-serif;
 }
 
 .dark {
-  --background: 206 76% 10%;
-  --foreground: 38 23% 92%;
-  --card: 206 64% 14%;
-  --card-foreground: 38 23% 92%;
-  --popover: 206 64% 12%;
-  --popover-foreground: 38 23% 92%;
-  --primary: 38 23% 55%;
-  --primary-foreground: 206 76% 10%;
-  --secondary: 200 3% 59%;
-  --secondary-foreground: 206 76% 10%;
-  --muted: 200 3% 45%;
-  --muted-foreground: 38 10% 80%;
-  --accent: 38 23% 45%;
-  --accent-foreground: 206 76% 10%;
-  --destructive: 0 63% 40%;
-  --destructive-foreground: 0 0% 92%;
-  --border: 200 3% 45%;
-  --input: 200 3% 45%;
-  --ring: 38 23% 45%;
+  --background: 206 36% 22%;
+  --foreground: 38 46% 96%;
+  --card: 206 32% 26%;
+  --card-foreground: 38 46% 96%;
+  --popover: 206 32% 24%;
+  --popover-foreground: 38 46% 96%;
+  --primary: 38 30% 64%;
+  --primary-foreground: 206 36% 22%;
+  --secondary: 206 22% 32%;
+  --secondary-foreground: 38 46% 96%;
+  --muted: 206 18% 28%;
+  --muted-foreground: 38 32% 68%;
+  --accent: 38 30% 58%;
+  --accent-foreground: 206 36% 22%;
+  --destructive: 0 56% 42%;
+  --destructive-foreground: 0 0% 96%;
+  --border: 206 22% 28%;
+  --input: 206 22% 28%;
+  --ring: 38 30% 58%;
 }
 
 * {
@@ -57,9 +57,9 @@
 
 body {
   background:
-    radial-gradient(circle at 20% 20%, hsla(38, 23%, 45%, 0.08), transparent 55%),
-    radial-gradient(circle at 80% 0%, hsla(206, 76%, 23%, 0.25), transparent 50%),
-    hsl(var(--background));
+    radial-gradient(circle at 12% 8%, hsla(38, 52%, 74%, 0.32), transparent 55%),
+    radial-gradient(circle at 88% 12%, hsla(206, 56%, 68%, 0.18), transparent 58%),
+    linear-gradient(135deg, hsla(38, 46%, 96%, 1), hsla(38, 42%, 90%, 0.9));
   color: hsl(var(--foreground));
   font-family: var(--font-secondary);
   letter-spacing: 0.01em;
@@ -108,9 +108,9 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(120% 120% at 120% 10%, hsla(38, 23%, 45%, 0.2) 0%, transparent 55%),
-    radial-gradient(100% 120% at 0% 100%, hsla(206, 76%, 23%, 0.18) 0%, transparent 60%);
-  opacity: 0.7;
+    radial-gradient(120% 120% at 120% 10%, hsla(38, 52%, 70%, 0.32) 0%, transparent 55%),
+    radial-gradient(100% 120% at 0% 100%, hsla(206, 64%, 48%, 0.18) 0%, transparent 60%);
+  opacity: 0.6;
   pointer-events: none;
 }
 
@@ -124,10 +124,10 @@ body {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 25% 25%, hsla(38, 23%, 45%, 0.16) 0, hsla(38, 23%, 45%, 0.08) 2px, transparent 3px),
-    radial-gradient(circle at 75% 75%, hsla(206, 76%, 23%, 0.16) 0, hsla(206, 76%, 23%, 0.06) 3px, transparent 4px);
-  background-size: 140px 140px, 220px 220px;
-  opacity: 0.18;
+    radial-gradient(circle at 25% 25%, hsla(38, 38%, 68%, 0.2) 0, hsla(38, 38%, 68%, 0.08) 2px, transparent 3px),
+    radial-gradient(circle at 75% 75%, hsla(206, 52%, 64%, 0.14) 0, hsla(206, 52%, 64%, 0.05) 3px, transparent 4px);
+  background-size: 160px 160px, 240px 240px;
+  opacity: 0.2;
   pointer-events: none;
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +19,7 @@ import {
   Zap
 } from "lucide-react";
 import { SDBPackage, SDBSubscription } from "@/types";
+import logoDark from "@/../public/qv_logo_h_white_bk.png";
 
 // Mock data
 const mockPackages: SDBPackage[] = [
@@ -138,53 +140,62 @@ export default function SubscriptionPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark flex items-center justify-center">
-        <div className="text-white">Loading subscription information...</div>
+     return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/25">
+        <p className="font-secondary text-muted-foreground/80">Loading subscription information…</p>
       </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark">
+     );
+   }
+ 
+   return (
+    <div className="min-h-screen bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/25">
       {/* Navigation */}
-      <nav className="border-b border-spi-silver/20 bg-spi-navy/95 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center">
-              <Shield className="h-8 w-8 text-spi-gold" />
-              <span className="ml-2 text-xl font-bold text-white">SPI Safe Deposit</span>
-            </Link>
-            <Link href="/member">
-              <Button variant="ghost" className="text-white hover:bg-spi-silver/20">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
-          </div>
+      <nav className="border-b border-qv-gold/30 bg-white/85 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-3">
+            <Image src={logoDark} alt="Quantum Vault" width={160} height={44} className="h-10 w-auto" />
+          </Link>
+          <Link href="/member">
+            <Button variant="ghost" className="font-primary text-[0.68rem] uppercase tracking-[0.28em] text-primary hover:bg-qv-gold/10">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
         </div>
       </nav>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+ 
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
+        <div className="mb-10 space-y-3">
+          <p className="font-primary text-xs uppercase tracking-[0.3em] text-secondary">
+            Membership Programmes
+          </p>
+          <h1 className="font-primary text-3xl tracking-[0.24em] text-primary">
             Subscription Management
           </h1>
-          <p className="text-spi-silver">
-            Manage your membership and subscription packages
+          <p className="font-secondary text-base text-muted-foreground/90">
+            Manage your membership and subscription packages with concierge precision.
           </p>
         </div>
-
+ 
         <Tabs defaultValue="current" className="space-y-6">
-          <TabsList className="bg-white/10 border-spi-silver/20">
-            <TabsTrigger value="current" className="text-white data-[state=active]:bg-spi-gold data-[state=active]:text-spi-navy">
+          <TabsList className="inline-flex rounded-full border border-qv-gold/30 bg-white/80 p-1 shadow-sm">
+            <TabsTrigger
+              value="current"
+              className="rounded-full px-4 py-2 font-primary text-[0.68rem] uppercase tracking-[0.28em] text-muted-foreground/80 transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
               Current Subscription
             </TabsTrigger>
-            <TabsTrigger value="packages" className="text-white data-[state=active]:bg-spi-gold data-[state=active]:text-spi-navy">
+            <TabsTrigger
+              value="packages"
+              className="rounded-full px-4 py-2 font-primary text-[0.68rem] uppercase tracking-[0.28em] text-muted-foreground/80 transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
               Available Packages
             </TabsTrigger>
-            <TabsTrigger value="history" className="text-white data-[state=active]:bg-spi-gold data-[state=active]:text-spi-navy">
+            <TabsTrigger
+              value="history"
+              className="rounded-full px-4 py-2 font-primary text-[0.68rem] uppercase tracking-[0.28em] text-muted-foreground/80 transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
               Subscription History
             </TabsTrigger>
           </TabsList>
@@ -192,18 +203,20 @@ export default function SubscriptionPage() {
           {/* Current Subscription Tab */}
           <TabsContent value="current" className="space-y-6">
             {subscription ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {/* Current Subscription Details */}
-                <Card className="bg-white/10 border-spi-silver/20 text-white">
+                <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-spi-gold/20 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-xl border border-qv-gold/30 bg-qv-gold/10 p-3 text-secondary">
                           {getPackageIcon(subscription.package.id)}
                         </div>
                         <div>
-                          <CardTitle className="text-white">{subscription.package.name}</CardTitle>
-                          <CardDescription className="text-spi-silver">
+                          <CardTitle className="font-primary text-base tracking-[0.2em] text-primary uppercase">
+                            {subscription.package.name}
+                          </CardTitle>
+                          <CardDescription className="font-secondary text-sm text-muted-foreground/80">
                             {subscription.package.description}
                           </CardDescription>
                         </div>
@@ -213,22 +226,28 @@ export default function SubscriptionPage() {
                       </Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-spi-silver">Start Date:</span>
-                      <span className="text-white">{new Date(subscription.start_date).toLocaleDateString()}</span>
+                      <span className="font-secondary text-sm text-muted-foreground/80">Start Date</span>
+                      <span className="font-secondary text-sm text-primary">
+                        {new Date(subscription.start_date).toLocaleDateString()}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-spi-silver">End Date:</span>
-                      <span className="text-white">{new Date(subscription.end_date).toLocaleDateString()}</span>
+                      <span className="font-secondary text-sm text-muted-foreground/80">End Date</span>
+                      <span className="font-secondary text-sm text-primary">
+                        {new Date(subscription.end_date).toLocaleDateString()}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-spi-silver">Auto Renew:</span>
-                      <span className="text-white">{subscription.auto_renew ? 'Yes' : 'No'}</span>
+                      <span className="font-secondary text-sm text-muted-foreground/80">Auto Renew</span>
+                      <span className="font-secondary text-sm text-primary">
+                        {subscription.auto_renew ? 'Enabled' : 'Disabled'}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-spi-silver">Price:</span>
-                      <span className="text-white font-medium">
+                      <span className="font-secondary text-sm text-muted-foreground/80">Price</span>
+                      <span className="font-primary text-sm tracking-[0.18em] text-secondary">
                         {subscription.package.price.toLocaleString()} {subscription.package.currency}
                       </span>
                     </div>
@@ -236,37 +255,37 @@ export default function SubscriptionPage() {
                 </Card>
 
                 {/* Package Features */}
-                <Card className="bg-white/10 border-spi-silver/20 text-white">
+                <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
                   <CardHeader>
-                    <CardTitle className="text-white">Package Features</CardTitle>
+                    <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                      Package Features
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
                       {subscription.package.features.map((feature, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <CheckCircle className="h-4 w-4 text-spi-gold" />
-                          <span className="text-white">{feature}</span>
+                        <div key={index} className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-secondary" />
+                          <span className="font-secondary text-sm text-primary">{feature}</span>
                         </div>
                       ))}
                     </div>
-                    
-                    <div className="mt-6 space-y-2">
+
+                    <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-spi-silver">Meeting Hours:</span>
-                        <span className="text-white">
-                          {subscription.package.max_meeting_hours === -1 
-                            ? 'Unlimited' 
-                            : `${subscription.package.max_meeting_hours} hours/month`
-                          }
+                        <span className="font-secondary text-sm text-muted-foreground/80">Meeting Hours</span>
+                        <span className="font-secondary text-sm text-primary">
+                          {subscription.package.max_meeting_hours === -1
+                            ? 'Unlimited'
+                            : `${subscription.package.max_meeting_hours} hours/month`}
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-spi-silver">Vault Access:</span>
-                        <span className="text-white">
-                          {subscription.package.max_vault_access === -1 
-                            ? 'Unlimited' 
-                            : `${subscription.package.max_vault_access} hours/month`
-                          }
+                        <span className="font-secondary text-sm text-muted-foreground/80">Vault Access</span>
+                        <span className="font-secondary text-sm text-primary">
+                          {subscription.package.max_vault_access === -1
+                            ? 'Unlimited'
+                            : `${subscription.package.max_vault_access} hours/month`}
                         </span>
                       </div>
                     </div>
@@ -274,31 +293,30 @@ export default function SubscriptionPage() {
                 </Card>
 
                 {/* Subscription Actions */}
-                <Card className="bg-white/10 border-spi-silver/20 text-white lg:col-span-2">
+                <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft lg:col-span-2">
                   <CardHeader>
-                    <CardTitle className="text-white">Subscription Actions</CardTitle>
+                    <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                      Subscription Actions
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <Button
-                        onClick={handleRenew}
-                        className="bg-spi-gold hover:bg-spi-gold/90 text-spi-navy"
-                      >
-                        <Zap className="h-4 w-4 mr-2" />
+                    <div className="flex flex-col gap-4 sm:flex-row">
+                      <Button onClick={handleRenew} variant="secondary" className="px-6">
+                        <Zap className="mr-2 h-4 w-4" />
                         Renew Subscription
                       </Button>
                       <Button
                         onClick={handleCancel}
                         variant="outline"
-                        className="border-red-500/30 text-red-400 hover:bg-red-500/10"
+                        className="border-rose-300 text-rose-600 hover:bg-rose-100"
                       >
                         Cancel Subscription
                       </Button>
                       <Button
                         variant="outline"
-                        className="border-spi-silver text-spi-silver hover:bg-spi-silver/10"
+                        className="border-qv-gold/30 text-primary hover:bg-qv-gold/10"
                       >
-                        <Settings className="h-4 w-4 mr-2" />
+                        <Settings className="mr-2 h-4 w-4" />
                         Manage Auto-Renew
                       </Button>
                     </div>
@@ -306,14 +324,16 @@ export default function SubscriptionPage() {
                 </Card>
               </div>
             ) : (
-              <Card className="bg-white/10 border-spi-silver/20 text-white">
-                <CardContent className="text-center py-12">
-                  <AlertCircle className="h-12 w-12 text-spi-silver mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-white mb-2">No Active Subscription</h3>
-                  <p className="text-spi-silver mb-6">
+              <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
+                <CardContent className="py-12 text-center">
+                  <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground/60" />
+                  <h3 className="font-primary text-lg tracking-[0.24em] text-primary">
+                    No Active Subscription
+                  </h3>
+                  <p className="mt-2 font-secondary text-sm text-muted-foreground/80">
                     You don&apos;t have an active subscription. Choose a package to get started.
                   </p>
-                  <Button className="bg-spi-gold hover:bg-spi-gold/90 text-spi-navy">
+                  <Button variant="secondary" className="mt-6 px-6">
                     View Available Packages
                   </Button>
                 </CardContent>
@@ -323,53 +343,57 @@ export default function SubscriptionPage() {
 
           {/* Available Packages Tab */}
           <TabsContent value="packages" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {packages.map((pkg) => (
-                <Card key={pkg.id} className="bg-white/10 border-spi-silver/20 text-white">
+                <Card key={pkg.id} className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-spi-gold/20 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="rounded-xl border border-qv-gold/30 bg-qv-gold/10 p-3 text-secondary">
                           {getPackageIcon(pkg.id)}
                         </div>
                         <div>
-                          <CardTitle className="text-white">{pkg.name}</CardTitle>
-                          <CardDescription className="text-spi-silver">
+                          <CardTitle className="font-primary text-base tracking-[0.2em] text-primary uppercase">
+                            {pkg.name}
+                          </CardTitle>
+                          <CardDescription className="font-secondary text-sm text-muted-foreground/80">
                             {pkg.duration_months} months
                           </CardDescription>
                         </div>
                       </div>
                       {subscription?.package.id === pkg.id && (
-                        <Badge className="bg-spi-gold/20 text-spi-gold border-spi-gold/30">
+                        <Badge className="border-qv-gold/30 bg-qv-gold/15 text-secondary">
                           Current
                         </Badge>
                       )}
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <p className="text-sm text-spi-silver">{pkg.description}</p>
+                    <p className="font-secondary text-sm text-muted-foreground/80">{pkg.description}</p>
                     
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-spi-gold">
+                      <div className="font-primary text-3xl tracking-[0.24em] text-secondary">
                         {pkg.price.toLocaleString()}
                       </div>
-                      <div className="text-spi-silver">{pkg.currency}</div>
+                      <div className="font-secondary text-sm text-muted-foreground/80">{pkg.currency}</div>
                     </div>
 
                     <div className="space-y-2">
-                      <h4 className="text-white font-medium">Features:</h4>
+                      <h4 className="font-primary text-sm tracking-[0.3em] text-primary">
+                        Features
+                      </h4>
                       {pkg.features.map((feature, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <CheckCircle className="h-4 w-4 text-spi-gold" />
-                          <span className="text-sm text-white">{feature}</span>
+                        <div key={index} className="flex items-center gap-2">
+                          <CheckCircle className="h-4 w-4 text-secondary" />
+                          <span className="font-secondary text-sm text-primary">{feature}</span>
                         </div>
                       ))}
                     </div>
 
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-spi-silver">Meeting Hours:</span>
-                        <span className="text-white">
+                        <span className="font-secondary text-muted-foreground/80">Meeting Hours</span>
+                        <span className="font-secondary text-primary">
                           {pkg.max_meeting_hours === -1 
                             ? 'Unlimited' 
                             : `${pkg.max_meeting_hours}/month`
@@ -377,8 +401,8 @@ export default function SubscriptionPage() {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-spi-silver">Vault Access:</span>
-                        <span className="text-white">
+                        <span className="font-secondary text-muted-foreground/80">Vault Access</span>
+                        <span className="font-secondary text-primary">
                           {pkg.max_vault_access === -1 
                             ? 'Unlimited' 
                             : `${pkg.max_vault_access} hours/month`
@@ -389,7 +413,8 @@ export default function SubscriptionPage() {
 
                     <Button
                       onClick={() => handleSubscribe(pkg.id)}
-                      className="w-full bg-spi-gold hover:bg-spi-gold/90 text-spi-navy"
+                      variant="secondary"
+                      className="w-full"
                       disabled={subscription?.package.id === pkg.id}
                     >
                       {subscription?.package.id === pkg.id ? 'Current Package' : 'Subscribe'}
@@ -402,17 +427,21 @@ export default function SubscriptionPage() {
 
           {/* Subscription History Tab */}
           <TabsContent value="history" className="space-y-6">
-            <Card className="bg-white/10 border-spi-silver/20 text-white">
+            <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
               <CardHeader>
-                <CardTitle className="text-white">Subscription History</CardTitle>
-                <CardDescription className="text-spi-silver">
+                <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                  Subscription History
+                </CardTitle>
+                <CardDescription className="font-secondary text-sm text-muted-foreground/80">
                   Your subscription history and payment records
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8">
-                  <Calendar className="h-12 w-12 text-spi-silver mx-auto mb-4" />
-                  <p className="text-spi-silver">No subscription history available</p>
+                <div className="py-8 text-center">
+                  <Calendar className="mx-auto mb-4 h-12 w-12 text-muted-foreground/60" />
+                  <p className="font-secondary text-sm text-muted-foreground/80">
+                    No subscription history available
+                  </p>
                 </div>
               </CardContent>
             </Card>

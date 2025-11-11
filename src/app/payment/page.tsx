@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
-  Shield, 
   CreditCard, 
   Download, 
   Search,
@@ -19,6 +19,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { SDBPayment } from "@/types";
+import logoDark from "@/../public/qv_logo_h_white_bk.png";
 
 // Mock payment data
 const mockPayments: SDBPayment[] = [
@@ -159,86 +160,92 @@ export default function PaymentPage() {
     .reduce((sum, payment) => sum + payment.amount, 0);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark flex items-center justify-center">
-        <div className="text-white">Loading payment history...</div>
+     return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/25">
+        <p className="font-secondary text-muted-foreground/80">Loading payment history…</p>
       </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark">
+     );
+   }
+ 
+   return (
+    <div className="min-h-screen bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/25">
       {/* Navigation */}
-      <nav className="border-b border-spi-silver/20 bg-spi-navy/95 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center">
-              <Shield className="h-8 w-8 text-spi-gold" />
-              <span className="ml-2 text-xl font-bold text-white">SPI Safe Deposit</span>
-            </Link>
-            <Link href="/member">
-              <Button variant="ghost" className="text-white hover:bg-spi-silver/20">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
-          </div>
+      <nav className="border-b border-qv-gold/30 bg-white/85 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-3">
+            <Image src={logoDark} alt="Quantum Vault" width={160} height={44} className="h-10 w-auto" />
+          </Link>
+          <Link href="/member">
+            <Button variant="ghost" className="font-primary text-[0.68rem] uppercase tracking-[0.28em] text-primary hover:bg-qv-gold/10">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Button>
+          </Link>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
+        <div className="mb-10 space-y-3">
+          <p className="font-primary text-xs uppercase tracking-[0.3em] text-secondary">
+            Concierge Billing
+          </p>
+          <h1 className="font-primary text-3xl tracking-[0.24em] text-primary">
             Payment History
           </h1>
-          <p className="text-spi-silver">
-            View and manage your payment transactions
+          <p className="font-secondary text-base text-muted-foreground/90">
+            View and manage your payment transactions across subscriptions and facility bookings.
           </p>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-white/10 border-spi-silver/20 text-white">
+        <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Paid</CardTitle>
-              <DollarSign className="h-4 w-4 text-spi-gold" />
+              <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                Total Paid
+              </CardTitle>
+              <DollarSign className="h-5 w-5 text-secondary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-spi-gold">
+              <div className="font-primary text-2xl tracking-[0.22em] text-secondary">
                 {totalAmount.toLocaleString()} THB
               </div>
-              <p className="text-xs text-spi-silver">
+              <p className="font-secondary text-xs text-muted-foreground/80">
                 Completed transactions
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 border-spi-silver/20 text-white">
+          <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending</CardTitle>
-              <AlertCircle className="h-4 w-4 text-yellow-400" />
+              <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                Pending
+              </CardTitle>
+              <AlertCircle className="h-5 w-5 text-amber-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-yellow-400">
+              <div className="font-primary text-2xl tracking-[0.22em] text-amber-600">
                 {pendingAmount.toLocaleString()} THB
               </div>
-              <p className="text-xs text-spi-silver">
+              <p className="font-secondary text-xs text-muted-foreground/80">
                 Awaiting confirmation
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/10 border-spi-silver/20 text-white">
+          <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Transactions</CardTitle>
-              <Receipt className="h-4 w-4 text-spi-gold" />
+              <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                Total Transactions
+              </CardTitle>
+              <Receipt className="h-5 w-5 text-secondary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-spi-gold">
+              <div className="font-primary text-2xl tracking-[0.22em] text-secondary">
                 {payments.length}
               </div>
-              <p className="text-xs text-spi-silver">
+              <p className="font-secondary text-xs text-muted-foreground/80">
                 All transactions
               </p>
             </CardContent>
@@ -246,23 +253,23 @@ export default function PaymentPage() {
         </div>
 
         {/* Filters */}
-        <Card className="bg-white/10 border-spi-silver/20 text-white mb-6">
+        <Card className="mb-8 border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
           <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col gap-4 md:flex-row">
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-spi-silver" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/60" />
                   <Input
                     placeholder="Search transactions..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-white/10 border-spi-silver/20 text-white placeholder:text-spi-silver"
+                    className="pl-10"
                   />
                 </div>
               </div>
               <div className="flex gap-4">
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-40 bg-white/10 border-spi-silver/20 text-white">
+                  <SelectTrigger className="w-40">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -274,7 +281,7 @@ export default function PaymentPage() {
                   </SelectContent>
                 </Select>
                 <Select value={methodFilter} onValueChange={setMethodFilter}>
-                  <SelectTrigger className="w-40 bg-white/10 border-spi-silver/20 text-white">
+                  <SelectTrigger className="w-40">
                     <SelectValue placeholder="Method" />
                   </SelectTrigger>
                   <SelectContent>
@@ -293,57 +300,59 @@ export default function PaymentPage() {
         <div className="space-y-4">
           {filteredPayments.length > 0 ? (
             filteredPayments.map((payment) => (
-              <Card key={payment.id} className="bg-white/10 border-spi-silver/20 text-white">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="p-2 bg-spi-gold/20 rounded-lg">
-                        {getMethodIcon(payment.payment_method)}
-                      </div>
-                      <div>
-                        <h4 className="text-white font-medium">{payment.description}</h4>
-                        <div className="flex items-center space-x-4 text-sm text-spi-silver">
+              <Card key={payment.id} className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
+                <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-1 items-start gap-4">
+                    <div className="rounded-xl border border-qv-gold/30 bg-qv-gold/10 p-3 text-secondary">
+                      {getMethodIcon(payment.payment_method)}
+                    </div>
+                    <div>
+                      <h4 className="font-primary text-base tracking-[0.2em] text-primary uppercase">
+                        {payment.description}
+                      </h4>
+                      <div className="mt-1 flex flex-wrap items-center gap-4 text-xs text-muted-foreground/70">
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="h-3 w-3" />
+                          <span>{new Date(payment.payment_date).toLocaleDateString()}</span>
+                        </div>
+                        {payment.transaction_id && (
                           <div className="flex items-center space-x-1">
-                            <Calendar className="h-3 w-3" />
-                            <span>{new Date(payment.payment_date).toLocaleDateString()}</span>
+                            <span>ID: {payment.transaction_id}</span>
                           </div>
-                          {payment.transaction_id && (
-                            <div className="flex items-center space-x-1">
-                              <span>ID: {payment.transaction_id}</span>
-                            </div>
-                          )}
-                        </div>
+                        )}
                       </div>
                     </div>
-                    <div className="flex items-center space-x-4">
-                      <div className="text-right">
-                        <div className="text-white font-medium">
-                          {payment.amount.toLocaleString()} {payment.currency}
-                        </div>
-                        <Badge className={getStatusColor(payment.status)}>
-                          {payment.status}
-                        </Badge>
-                      </div>
-                      <Button
-                        onClick={() => handleDownloadReceipt(payment.id)}
-                        variant="outline"
-                        size="sm"
-                        className="border-spi-silver text-spi-silver hover:bg-spi-silver/10"
-                      >
-                        <Download className="h-4 w-4 mr-2" />
-                        Receipt
-                      </Button>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="font-primary text-sm tracking-[0.18em] text-primary">
+                        {payment.amount.toLocaleString()} {payment.currency}
+                      </p>
+                      <Badge className={getStatusColor(payment.status)}>
+                        {payment.status}
+                      </Badge>
                     </div>
+                    <Button
+                      onClick={() => handleDownloadReceipt(payment.id)}
+                      variant="outline"
+                      size="sm"
+                      className="border-qv-gold/30 text-primary hover:bg-qv-gold/10"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      Receipt
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             ))
           ) : (
-            <Card className="bg-white/10 border-spi-silver/20 text-white">
-              <CardContent className="text-center py-12">
-                <Receipt className="h-12 w-12 text-spi-silver mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">No payments found</h3>
-                <p className="text-spi-silver">
+            <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
+              <CardContent className="py-12 text-center">
+                <Receipt className="mx-auto mb-4 h-12 w-12 text-muted-foreground/60" />
+                <h3 className="font-primary text-lg tracking-[0.24em] text-primary">
+                  No payments found
+                </h3>
+                <p className="mt-2 font-secondary text-sm text-muted-foreground/80">
                   {searchTerm || statusFilter !== "all" || methodFilter !== "all"
                     ? "No payments match your current filters."
                     : "You don't have any payment history yet."

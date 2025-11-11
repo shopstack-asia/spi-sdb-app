@@ -69,9 +69,9 @@ export default function ClientLoginForm() {
   };
 
   return (
-    <Card className="border-qv-chrome/30 bg-surface/85 shadow-qv-soft">
+    <Card className="border-qv-gold/25 bg-white/90 shadow-qv-soft">
       <CardHeader className="space-y-3 text-center">
-        <CardTitle className="font-primary text-sm tracking-[0.3em] text-secondary-foreground">
+        <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
           Vault Entry Verification
         </CardTitle>
         <CardDescription className="font-secondary text-xs text-muted-foreground/80">
@@ -89,7 +89,7 @@ export default function ClientLoginForm() {
                   <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                      <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
                       <Input
                         type="email"
                         placeholder="member@quantumvault.com"
@@ -111,7 +111,7 @@ export default function ClientLoginForm() {
                   <FormLabel>Secure Passphrase</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                      <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
                       <Input
                         type="password"
                         placeholder="••••••••"

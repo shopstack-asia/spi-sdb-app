@@ -1,12 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import {
+  Shield,
+  Calendar,
+  CreditCard,
+  Settings,
+  Plus,
+  ArrowRight,
+  Coins,
+  TrendingUp,
+  TrendingDown,
+  Ticket,
+} from 'lucide-react';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Shield, Calendar, CreditCard, Settings, Plus, ArrowRight, Coins, TrendingUp, TrendingDown, Ticket } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { SDBBooking, SDBSubscription, SDBPayment } from '@/types';
+import { cn } from '@/lib/utils';
+
+import logoDark from '@/../public/qv_logo_h_white_bk.png';
 
 interface User {
   id: string;
@@ -35,6 +52,60 @@ interface Coupon {
   redeem_date?: string;
 }
 
+type CouponFilter = 'ALL' | 'AVAILABLE' | 'USED' | 'EXPIRED' | 'REDEEM';
+
+type StatusTone = {
+  bg: string;
+  text: string;
+  border: string;
+};
+
+const bookingStatusTone: Record<string, StatusTone> = {
+  CONFIRMED: {
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+  },
+  PENDING: {
+    bg: 'bg-amber-50',
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+  },
+  COMPLETED: {
+    bg: 'bg-sky-50',
+    text: 'text-sky-700',
+    border: 'border-sky-200',
+  },
+  CANCELLED: {
+    bg: 'bg-rose-50',
+    text: 'text-rose-700',
+    border: 'border-rose-200',
+  },
+};
+
+const couponStatusTone: Record<Coupon['status'], StatusTone> = {
+  AVAILABLE: {
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+  },
+  USED: {
+    bg: 'bg-slate-100',
+    text: 'text-slate-600',
+    border: 'border-slate-200',
+  },
+  EXPIRED: {
+    bg: 'bg-rose-50',
+    text: 'text-rose-700',
+    border: 'border-rose-200',
+  },
+  REDEEM: {
+    bg: 'bg-amber-50',
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+  },
+};
+
 export default function ClientDashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [bookings, setBookings] = useState<SDBBooking[]>([]);
@@ -45,84 +116,82 @@ export default function ClientDashboard() {
   const [showPointHistory, setShowPointHistory] = useState(false);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [showCoupons, setShowCoupons] = useState(false);
-  const [couponFilter, setCouponFilter] = useState<'ALL' | 'AVAILABLE' | 'USED' | 'EXPIRED' | 'REDEEM'>('ALL');
+  const [couponFilter, setCouponFilter] = useState<CouponFilter>('ALL');
 
   useEffect(() => {
-    // Mock data for demonstration - only essential fields
     const mockUser: User = {
-      id: "test-user-id",
-      first_name: "Test",
-      member_level: "Gold Member"
+      id: 'test-user-id',
+      first_name: 'Test',
+      member_level: 'Gold Member',
     };
 
     const mockBookings: SDBBooking[] = [
       {
-        id: "book-001",
+        id: 'book-001',
         member_id: mockUser.id,
-        facility_id: "fac-mr-a",
+        facility_id: 'fac-mr-a',
         facility: {
-          id: "fac-mr-a",
-          name: "Meeting Room A",
-          type: "MEETING_ROOM",
+          id: 'fac-mr-a',
+          name: 'Meeting Room A',
+          type: 'MEETING_ROOM',
           capacity: 10,
-          description: "Spacious meeting room with projector",
+          description: 'Spacious meeting room with projector',
           hourly_rate: 1000,
-          currency: "THB",
-          is_active: true
+          currency: 'THB',
+          is_active: true,
         },
-        booking_date: "2025-10-15",
-        start_time: "10:00",
-        end_time: "11:00",
-        status: "CONFIRMED",
+        booking_date: '2025-10-15',
+        start_time: '10:00',
+        end_time: '11:00',
+        status: 'CONFIRMED',
         total_cost: 1000,
-        currency: "THB",
-        purpose: "Business meeting",
+        currency: 'THB',
+        purpose: 'Business meeting',
         visitors: [],
-        created_at: "2025-01-01T10:00:00Z",
-        updated_at: "2025-01-01T10:00:00Z"
-      }
+        created_at: '2025-01-01T10:00:00Z',
+        updated_at: '2025-01-01T10:00:00Z',
+      },
     ];
 
     const mockSubscriptions: SDBSubscription[] = [
       {
-        id: "sub-001",
+        id: 'sub-001',
         member_id: mockUser.id,
-        package_id: "pkg-premium",
+        package_id: 'pkg-premium',
         package: {
-          id: "pkg-premium",
-          name: "Premium Vault Package",
-          description: "Premium vault access with meeting room privileges",
+          id: 'pkg-premium',
+          name: 'Premium Vault Package',
+          description: 'Premium vault access with meeting room privileges',
           price: 12000,
-          currency: "THB",
+          currency: 'THB',
           duration_months: 12,
-          features: ["Vault Access", "Meeting Room", "Priority Support"],
+          features: ['Vault Access', 'Meeting Room', 'Priority Support'],
           max_meeting_hours: 20,
           max_vault_access: 10,
-          is_active: true
+          is_active: true,
         },
-        start_date: "2025-01-01T00:00:00Z",
-        end_date: "2026-01-01T00:00:00Z",
-        status: "ACTIVE",
-        auto_renew: true
-      }
+        start_date: '2025-01-01T00:00:00Z',
+        end_date: '2026-01-01T00:00:00Z',
+        status: 'ACTIVE',
+        auto_renew: true,
+      },
     ];
 
     const mockPayments: SDBPayment[] = [
       {
-        id: "pay-001",
+        id: 'pay-001',
         member_id: mockUser.id,
-        subscription_id: "sub-001",
+        subscription_id: 'sub-001',
         amount: 12000,
-        currency: "THB",
-        payment_method: "CREDIT_CARD",
-        status: "COMPLETED",
-        transaction_id: "txn-001",
-        payment_date: "2025-01-01T10:30:00Z",
-        description: "Premium Vault Package Renewal"
-      }
+        currency: 'THB',
+        payment_method: 'CREDIT_CARD',
+        status: 'COMPLETED',
+        transaction_id: 'txn-001',
+        payment_date: '2025-01-01T10:30:00Z',
+        description: 'Premium Vault Package Renewal',
+      },
     ];
 
-    // Mock point data
     const mockTotalPoints = 1250;
     const mockPointHistory: PointHistory[] = [
       {
@@ -130,36 +199,31 @@ export default function ClientDashboard() {
         type: 'EARN',
         points: 100,
         description: 'Monthly subscription bonus',
-        date: '2025-01-15T10:00:00Z'
+        date: '2025-01-15T10:00:00Z',
       },
       {
         id: 'ph-002',
         type: 'EARN',
         points: 50,
         description: 'Facility booking reward',
-        date: '2025-01-10T14:30:00Z'
+        date: '2025-01-10T14:30:00Z',
       },
       {
         id: 'ph-003',
         type: 'REDEEM',
         points: -200,
         description: 'Redeemed for discount voucher',
-        date: '2025-01-05T09:15:00Z'
+        date: '2025-01-05T09:15:00Z',
       },
       {
         id: 'ph-004',
         type: 'EARN',
         points: 300,
         description: 'Welcome bonus',
-        date: '2025-01-01T08:00:00Z'
-      }
+        date: '2025-01-01T08:00:00Z',
+      },
     ];
 
-    setUser(mockUser);
-    setBookings(mockBookings);
-    setSubscriptions(mockSubscriptions);
-    setPayments(mockPayments);
-    // Mock coupon data
     const mockCoupons: Coupon[] = [
       {
         id: 'cpn-001',
@@ -169,7 +233,7 @@ export default function ClientDashboard() {
         discount_type: 'PERCENTAGE',
         discount_value: 10,
         status: 'AVAILABLE',
-        expiry_date: '2025-12-31T23:59:59Z'
+        expiry_date: '2025-12-31T23:59:59Z',
       },
       {
         id: 'cpn-002',
@@ -180,7 +244,7 @@ export default function ClientDashboard() {
         discount_value: 500,
         status: 'USED',
         used_date: '2025-01-10T14:30:00Z',
-        expiry_date: '2025-06-30T23:59:59Z'
+        expiry_date: '2025-06-30T23:59:59Z',
       },
       {
         id: 'cpn-003',
@@ -190,7 +254,7 @@ export default function ClientDashboard() {
         discount_type: 'PERCENTAGE',
         discount_value: 20,
         status: 'EXPIRED',
-        expiry_date: '2024-12-31T23:59:59Z'
+        expiry_date: '2024-12-31T23:59:59Z',
       },
       {
         id: 'cpn-004',
@@ -201,7 +265,7 @@ export default function ClientDashboard() {
         discount_value: 200,
         status: 'REDEEM',
         redeem_date: '2025-01-05T09:15:00Z',
-        expiry_date: '2025-12-31T23:59:59Z'
+        expiry_date: '2025-12-31T23:59:59Z',
       },
       {
         id: 'cpn-005',
@@ -211,10 +275,14 @@ export default function ClientDashboard() {
         discount_type: 'PERCENTAGE',
         discount_value: 15,
         status: 'AVAILABLE',
-        expiry_date: '2025-06-30T23:59:59Z'
-      }
+        expiry_date: '2025-06-30T23:59:59Z',
+      },
     ];
 
+    setUser(mockUser);
+    setBookings(mockBookings);
+    setSubscriptions(mockSubscriptions);
+    setPayments(mockPayments);
     setTotalPoints(mockTotalPoints);
     setPointHistory(mockPointHistory);
     setCoupons(mockCoupons);
@@ -222,596 +290,625 @@ export default function ClientDashboard() {
 
   if (!user) {
     return (
-      <div style={{ backgroundColor: '#0a1a2f', color: 'white', minHeight: '100vh', padding: '2rem' }}>
-        <h1 style={{ color: 'white', fontSize: '2rem' }}>Loading...</h1>
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/25">
+        <p className="font-secondary text-muted-foreground">Loading member experience…</p>
       </div>
     );
   }
 
-  const activeSubscription = subscriptions.find(sub => sub.status === 'ACTIVE');
-  const upcomingBookings = bookings.filter(booking => 
-    new Date(booking.booking_date) >= new Date()
+  const activeSubscription = subscriptions.find((sub) => sub.status === 'ACTIVE');
+  const upcomingBookings = bookings.filter(
+    (booking) => new Date(booking.booking_date) >= new Date()
   );
 
+  const quickStats = [
+    {
+      title: 'Membership Status',
+      value: user.member_level,
+      subtitle: activeSubscription
+        ? `Expires: ${new Date(activeSubscription.end_date).toLocaleDateString()}`
+        : 'No active subscription',
+      icon: Shield,
+    },
+    {
+      title: 'Active Bookings',
+      value: upcomingBookings.length.toString(),
+      subtitle: 'Upcoming meetings',
+      icon: Calendar,
+    },
+    {
+      title: 'Next Payment',
+      value: activeSubscription
+        ? `${activeSubscription.package.price.toLocaleString()} THB`
+        : '—',
+      subtitle: activeSubscription
+        ? `Due: ${new Date(activeSubscription.end_date).toLocaleDateString()}`
+        : 'No upcoming payment',
+      icon: CreditCard,
+    },
+    {
+      title: 'Total Points',
+      value: totalPoints.toLocaleString(),
+      subtitle: 'Available points',
+      icon: Coins,
+    },
+  ];
+
+  const quickActions = [
+    {
+      label: 'Book Facility',
+      description: 'Reserve meeting rooms or vault suites',
+      icon: Plus,
+      href: '/booking',
+      variant: 'secondary' as const,
+    },
+    {
+      label: 'Manage Subscription',
+      description: 'Upgrade packages or adjust renewals',
+      icon: Settings,
+      href: '/subscription',
+      variant: 'outline' as const,
+    },
+    {
+      label: 'Payment History',
+      description: 'Review invoices and receipts',
+      icon: CreditCard,
+      href: '/payment',
+      variant: 'outline' as const,
+    },
+    {
+      label: 'Show Point History',
+      description: 'Track loyalty earnings and redemptions',
+      icon: TrendingUp,
+      action: () => setShowPointHistory(true),
+      variant: 'outline' as const,
+    },
+    {
+      label: 'My Coupons',
+      description: 'Exclusive incentives for your vault suite',
+      icon: Ticket,
+      action: () => setShowCoupons(true),
+      variant: 'outline' as const,
+    },
+  ];
+
+  const filteredCoupons = coupons.filter(
+    (coupon) => couponFilter === 'ALL' || coupon.status === couponFilter
+  );
+
+  const totalEarned = pointHistory
+    .filter((item) => item.type === 'EARN')
+    .reduce((sum, item) => sum + item.points, 0);
+  const totalRedeemed = pointHistory
+    .filter((item) => item.type === 'REDEEM')
+    .reduce((sum, item) => sum + Math.abs(item.points), 0);
+
   return (
-    <div style={{ backgroundColor: '#0a1a2f', color: 'white', minHeight: '100vh' }}>
-      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '2rem 1rem' }}>
-        {/* Welcome Section */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ color: 'white', fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>
-            Welcome back, {user.first_name}!
-          </h1>
-          <p style={{ color: '#e5e7eb' }}>
-            Manage your safe deposit box membership and bookings
-          </p>
-        </div>
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/25">
+      <div className="pointer-events-none absolute inset-0 -z-10 seed-pod-pattern opacity-40" />
 
-        {/* Quick Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
-          <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
-            <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Membership Status</CardTitle>
-              <Shield style={{ height: '1rem', width: '1rem', color: '#d4af37' }} />
-            </CardHeader>
-            <CardContent>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d4af37' }}>{user.member_level}</div>
-              <p style={{ fontSize: '0.75rem', color: '#e5e7eb' }}>
-                {activeSubscription ? `Expires: ${new Date(activeSubscription.end_date).toLocaleDateString()}` : 'No active subscription'}
-              </p>
-            </CardContent>
-          </Card>
+      <div className="relative mx-auto max-w-7xl px-6 py-12 space-y-12">
+        <header className="flex flex-wrap items-start justify-between gap-6">
+          <div className="max-w-3xl space-y-3">
+            <p className="font-primary text-xs uppercase tracking-[0.3em] text-secondary">
+              Member Control Centre
+            </p>
+            <h1 className="font-primary text-4xl tracking-[0.24em] text-primary">
+              Welcome back, {user.first_name}!
+            </h1>
+            <p className="font-secondary text-base text-muted-foreground/90">
+              Manage your bespoke custody membership, concierge bookings, and loyalty privileges within the Quantum Vault ecosystem.
+            </p>
+          </div>
+          <Image src={logoDark} alt="Quantum Vault" width={200} height={56} className="h-12 w-auto" />
+        </header>
 
-          <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
-            <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Active Bookings</CardTitle>
-              <Calendar style={{ height: '1rem', width: '1rem', color: '#d4af37' }} />
-            </CardHeader>
-            <CardContent>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d4af37' }}>{upcomingBookings.length}</div>
-              <p style={{ fontSize: '0.75rem', color: '#e5e7eb' }}>
-                Upcoming meetings
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
-            <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Next Payment</CardTitle>
-              <CreditCard style={{ height: '1rem', width: '1rem', color: '#d4af37' }} />
-            </CardHeader>
-            <CardContent>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d4af37' }}>
-                {activeSubscription ? `${activeSubscription.package.price.toLocaleString()} THB` : 'N/A'}
-              </div>
-              <p style={{ fontSize: '0.75rem', color: '#e5e7eb' }}>
-                {activeSubscription ? `Due: ${new Date(activeSubscription.end_date).toLocaleDateString()}` : 'No active subscription'}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
-            <CardHeader style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <CardTitle style={{ fontSize: '0.875rem', fontWeight: '500' }}>Total Points</CardTitle>
-              <Coins style={{ height: '1rem', width: '1rem', color: '#d4af37' }} />
-            </CardHeader>
-            <CardContent>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#d4af37' }}>{totalPoints.toLocaleString()}</div>
-              <p style={{ fontSize: '0.75rem', color: '#e5e7eb' }}>
-                Available points
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Main Content Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-          {/* Left Column - Quick Actions */}
-          <div>
-            <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', marginBottom: '1.5rem' }}>
-              <CardHeader>
-                <CardTitle style={{ color: 'white' }}>Quick Actions</CardTitle>
+        <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          {quickStats.map((stat) => (
+            <Card
+              key={stat.title}
+              className="border-qv-gold/25 bg-white/90 shadow-qv-soft"
+            >
+              <CardHeader className="flex flex-row items-start justify-between space-y-0">
+                <CardTitle className="font-primary text-[0.7rem] uppercase tracking-[0.28em] text-muted-foreground">
+                  {stat.title}
+                </CardTitle>
+                <stat.icon className="h-5 w-5 text-secondary" />
               </CardHeader>
-              <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                <Link href="/booking">
-                  <button style={{ 
-                    width: '100%', 
-                    backgroundColor: '#d4af37', 
-                    color: '#0a1a2f', 
-                    padding: '0.75rem 1rem', 
-                    borderRadius: '0.375rem', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    border: 'none',
-                    cursor: 'pointer'
-                  }}>
-                    <Plus style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
-                    Book Facility
-                  </button>
-                </Link>
-                <Link href="/subscription">
-                  <button style={{ 
-                    width: '100%', 
-                    border: '1px solid #e5e7eb', 
-                    color: '#e5e7eb', 
-                    padding: '0.75rem 1rem', 
-                    borderRadius: '0.375rem', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer'
-                  }}>
-                    <Settings style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
-                    Manage Subscription
-                  </button>
-                </Link>
-                <Link href="/payment">
-                  <button style={{ 
-                    width: '100%', 
-                    border: '1px solid #e5e7eb', 
-                    color: '#e5e7eb', 
-                    padding: '0.75rem 1rem', 
-                    borderRadius: '0.375rem', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer'
-                  }}>
-                    <CreditCard style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
-                    Payment History
-                  </button>
-                </Link>
-                <button 
-                  onClick={() => setShowPointHistory(true)}
-                  style={{ 
-                    width: '100%', 
-                    border: '1px solid #e5e7eb', 
-                    color: '#e5e7eb', 
-                    padding: '0.75rem 1rem', 
-                    borderRadius: '0.375rem', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer'
-                  }}>
-                  <Coins style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
-                  Show Point History
-                </button>
-                <button 
-                  onClick={() => setShowCoupons(true)}
-                  style={{ 
-                    width: '100%', 
-                    border: '1px solid #e5e7eb', 
-                    color: '#e5e7eb', 
-                    padding: '0.75rem 1rem', 
-                    borderRadius: '0.375rem', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    backgroundColor: 'transparent',
-                    cursor: 'pointer'
-                  }}>
-                  <Ticket style={{ height: '1rem', width: '1rem', marginRight: '0.5rem' }} />
-                  My Coupon
-                </button>
+              <CardContent className="space-y-3">
+                <p className="font-primary text-xl tracking-[0.2em] text-primary">
+                  {stat.value}
+                </p>
+                <p className="font-secondary text-sm text-muted-foreground/80">
+                  {stat.subtitle}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
+
+        <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+          <div className="space-y-6">
+            <Card className="border-qv-gold/25 bg-white/90 shadow-qv-soft">
+              <CardHeader>
+                <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                  Quick Actions
+                </CardTitle>
+                <CardDescription className="font-secondary text-sm text-muted-foreground/80">
+                  Curated shortcuts for your most frequent concierge tasks
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {quickActions.map((action) => {
+                  const Icon = action.icon;
+                  const isPrimaryAction = action.variant === 'secondary';
+                  const iconWrapperClass = cn(
+                    'flex h-10 w-10 items-center justify-center rounded-full border px-0 text-secondary',
+                    isPrimaryAction
+                      ? 'border-white/30 bg-white/10 text-white'
+                      : 'border-qv-gold/30 bg-qv-gold/10 text-secondary'
+                  );
+                  const labelClass = cn(
+                    'font-primary text-xs uppercase tracking-[0.18em]',
+                    isPrimaryAction ? 'text-white/90' : 'text-secondary'
+                  );
+                  const descriptionClass = cn(
+                    'font-secondary text-[0.5rem] leading-relaxed',
+                    isPrimaryAction ? 'text-white/85' : 'text-primary/80'
+                  );
+                  const arrowClass = cn(
+                    'h-5 w-5 self-center hidden',
+                    isPrimaryAction ? 'text-white/80' : 'text-primary'
+                  );
+
+                  const button = action.href ? (
+                    <Link key={action.label} href={action.href}>
+                      <Button
+                        variant={action.variant}
+                        className={cn(
+                          'flex w-full items-center justify-between gap-4 rounded-2xl border-qv-gold/30 px-5 py-5 text-left shadow-sm transition hover:shadow-lg p-8 m-2',
+                          isPrimaryAction
+                            ? 'bg-qv-gold/90 text-white hover:bg-qv-gold'
+                            : 'bg-white text-primary hover:bg-qv-gold/10'
+                        )}
+                      >
+                        <span className="flex flex-1 items-center gap-4">
+                          <span className={iconWrapperClass}>
+                            <Icon className="h-5 w-5" />
+                          </span>
+                          <span className="flex flex-col">
+                            <span className={labelClass}>{action.label}</span>
+                            <span className={descriptionClass}>{action.description}</span>
+                          </span>
+                        </span>
+                        <ArrowRight className={arrowClass} />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button
+                      key={action.label}
+                      variant={action.variant}
+                      onClick={action.action}
+                      className={cn(
+                        'flex w-full items-center justify-between gap-4 rounded-2xl border-qv-gold/30 px-5 py-5 text-left shadow-sm transition hover:shadow-lg p-8 m-2',
+                        isPrimaryAction
+                          ? 'bg-qv-gold/90 text-white hover:bg-qv-gold'
+                          : 'bg-white text-primary hover:bg-qv-gold/10'
+                      )}
+                    >
+                      <span className="flex flex-1 items-center gap-4">
+                        <span className={iconWrapperClass}>
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <span className="flex flex-col">
+                          <span className={labelClass}>{action.label}</span>
+                          <span className={descriptionClass}>{action.description}</span>
+                        </span>
+                      </span>
+                      <ArrowRight className={arrowClass} />
+                    </Button>
+                  );
+
+                  return button;
+                })}
               </CardContent>
             </Card>
 
-            {/* Subscription Info */}
             {activeSubscription && (
-              <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
+              <Card className="border-qv-gold/25 bg-white/90 shadow-qv-soft">
                 <CardHeader>
-                  <CardTitle style={{ color: 'white' }}>Current Subscription</CardTitle>
+                  <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                    Current Subscription
+                  </CardTitle>
+                  <CardDescription className="font-secondary text-sm text-muted-foreground/80">
+                    Overview of your active custody programme
+                  </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: '#e5e7eb' }}>Package:</span>
-                      <span style={{ color: 'white', fontWeight: '500' }}>{activeSubscription.package.name}</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: '#e5e7eb' }}>Status:</span>
-                      <Badge style={{ backgroundColor: 'rgba(34, 197, 94, 0.2)', color: '#4ade80', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
-                        {activeSubscription.status}
-                      </Badge>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: '#e5e7eb' }}>Expires:</span>
-                      <span style={{ color: 'white' }}>{new Date(activeSubscription.end_date).toLocaleDateString()}</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ color: '#e5e7eb' }}>Auto Renew:</span>
-                      <span style={{ color: 'white' }}>{activeSubscription.auto_renew ? 'Yes' : 'No'}</span>
-                    </div>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="font-secondary text-sm text-muted-foreground/80">Package</span>
+                    <span className="font-primary text-sm tracking-[0.2em] text-primary uppercase">
+                      {activeSubscription.package.name}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-secondary text-sm text-muted-foreground/80">Status</span>
+                    <Badge className="rounded-full border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+                      {activeSubscription.status}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-secondary text-sm text-muted-foreground/80">Expires</span>
+                    <span className="font-secondary text-sm text-primary">
+                      {new Date(activeSubscription.end_date).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-secondary text-sm text-muted-foreground/80">Auto Renew</span>
+                    <span className="font-secondary text-sm text-primary">
+                      {activeSubscription.auto_renew ? 'Enabled' : 'Disabled'}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
             )}
           </div>
 
-          {/* Right Column - Recent Activity */}
-          <div>
-            {/* Upcoming Bookings */}
-            <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', marginBottom: '1.5rem' }}>
-              <CardHeader>
-                <CardTitle style={{ color: 'white' }}>Upcoming Bookings</CardTitle>
-                <CardDescription style={{ color: '#e5e7eb' }}>
-                  Your scheduled facility bookings
-                </CardDescription>
+          <div className="space-y-6">
+            <Card className="border-qv-gold/25 bg-white/90 shadow-qv-soft">
+              <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                    Upcoming Bookings
+                  </CardTitle>
+                  <CardDescription className="font-secondary text-sm text-muted-foreground/80">
+                    Your scheduled facility bookings
+                  </CardDescription>
+                </div>
+                <Link href="/booking">
+                  <Button variant="ghost" className="text-primary hover:bg-qv-gold/10">
+                    View All
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </CardHeader>
               <CardContent>
                 {upcomingBookings.length > 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {upcomingBookings.slice(0, 3).map((booking) => (
-                      <div key={booking.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: '0.5rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                          <div style={{ padding: '0.5rem', backgroundColor: 'rgba(212, 175, 55, 0.2)', borderRadius: '0.5rem' }}>
-                            <Calendar style={{ height: '1.25rem', width: '1.25rem', color: '#d4af37' }} />
-                          </div>
-                          <div>
-                            <h4 style={{ fontWeight: '500', color: 'white' }}>{booking.facility.name}</h4>
-                            <p style={{ fontSize: '0.875rem', color: '#e5e7eb' }}>
-                              {new Date(booking.booking_date).toLocaleDateString()} • {booking.start_time} - {booking.end_time}
-                            </p>
+                  <div className="space-y-4">
+                    {upcomingBookings.slice(0, 3).map((booking) => {
+                      const tone = bookingStatusTone[booking.status] ?? bookingStatusTone.CONFIRMED;
+                      return (
+                        <div
+                          key={booking.id}
+                          className="rounded-2xl border border-qv-gold/20 bg-white/80 p-4 shadow-sm"
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex flex-1 items-start gap-4">
+                              <div className="rounded-xl border border-qv-gold/30 bg-qv-gold/10 p-3 text-secondary">
+                                <Calendar className="h-5 w-5" />
+                              </div>
+                              <div>
+                                <h4 className="font-primary text-base tracking-[0.2em] text-primary uppercase">
+                                  {booking.facility.name}
+                                </h4>
+                                <p className="font-secondary text-sm text-muted-foreground/80">
+                                  {new Date(booking.booking_date).toLocaleDateString()} · {booking.start_time} –{' '}
+                                  {booking.end_time}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge
+                              className={cn(
+                                'rounded-full px-3 py-1 text-xs font-medium',
+                                tone.bg,
+                                tone.text,
+                                tone.border,
+                                'border'
+                              )}
+                            >
+                              {booking.status}
+                            </Badge>
                           </div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <Badge style={{
-                            backgroundColor: booking.status === 'CONFIRMED' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(234, 179, 8, 0.2)',
-                            color: booking.status === 'CONFIRMED' ? '#4ade80' : '#facc15',
-                            border: booking.status === 'CONFIRMED' ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid rgba(234, 179, 8, 0.3)'
-                          }}>
-                            {booking.status}
-                          </Badge>
-                          <Link href={`/booking/${booking.id}`}>
-                            <button style={{ color: '#d4af37' }}>
-                              <ArrowRight style={{ height: '1rem', width: '1rem' }} />
-                            </button>
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
-                  <div style={{ textAlign: 'center', padding: '2rem' }}>
-                    <Calendar style={{ height: '3rem', width: '3rem', color: '#e5e7eb', margin: '0 auto 1rem' }} />
-                    <p style={{ color: '#e5e7eb', marginBottom: '1rem' }}>No upcoming bookings</p>
+                  <div className="rounded-2xl border border-dashed border-qv-gold/30 bg-white/70 p-10 text-center">
+                    <Calendar className="mx-auto h-12 w-12 text-muted-foreground/60" />
+                    <p className="mt-4 font-secondary text-sm text-muted-foreground/80">
+                      No upcoming bookings
+                    </p>
                     <Link href="/booking">
-                      <button style={{ backgroundColor: '#d4af37', color: '#0a1a2f', padding: '0.5rem 1rem', borderRadius: '0.375rem' }}>
+                      <Button className="mt-6 px-6">
                         Book a Facility
-                      </button>
+                      </Button>
                     </Link>
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            {/* Recent Payments */}
-            <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white' }}>
+            <Card className="border-qv-gold/25 bg-white/90 shadow-qv-soft">
               <CardHeader>
-                <CardTitle style={{ color: 'white' }}>Recent Payments</CardTitle>
-                <CardDescription style={{ color: '#e5e7eb' }}>
-                  Your payment history
+                <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                  Recent Payments
+                </CardTitle>
+                <CardDescription className="font-secondary text-sm text-muted-foreground/80">
+                  Concierge billing and subscription history
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {payments.length > 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    {payments.slice(0, 3).map((payment) => (
-                      <div key={payment.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: '0.5rem' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                          <div style={{ padding: '0.5rem', backgroundColor: 'rgba(212, 175, 55, 0.2)', borderRadius: '0.5rem' }}>
-                            <CreditCard style={{ height: '1.25rem', width: '1.25rem', color: '#d4af37' }} />
+                  <div className="space-y-4">
+                    {payments.slice(0, 4).map((payment) => (
+                      <div
+                        key={payment.id}
+                        className="rounded-2xl border border-qv-gold/20 bg-white/80 p-4 shadow-sm"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-4">
+                          <div className="flex items-start gap-4">
+                            <div className="rounded-xl border border-qv-gold/30 bg-qv-gold/10 p-3 text-secondary">
+                              <CreditCard className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <h4 className="font-primary text-base tracking-[0.2em] text-primary uppercase">
+                                {payment.description}
+                              </h4>
+                              <p className="font-secondary text-sm text-muted-foreground/80">
+                                {new Date(payment.payment_date).toLocaleDateString()} · {payment.payment_method}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <h4 style={{ fontWeight: '500', color: 'white' }}>{payment.description}</h4>
-                            <p style={{ fontSize: '0.875rem', color: '#e5e7eb' }}>
-                              {new Date(payment.payment_date).toLocaleDateString()} • {payment.payment_method}
-                            </p>
+                          <div className="flex items-center gap-3">
+                            <span className="font-primary text-sm tracking-[0.18em] text-primary">
+                              {payment.amount.toLocaleString()} {payment.currency}
+                            </span>
+                            <Badge className="rounded-full border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+                              {payment.status}
+                            </Badge>
                           </div>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <span style={{ color: 'white', fontWeight: '500' }}>
-                            {payment.amount.toLocaleString()} {payment.currency}
-                          </span>
-                          <Badge style={{
-                            backgroundColor: 'rgba(34, 197, 94, 0.2)',
-                            color: '#4ade80',
-                            border: '1px solid rgba(34, 197, 94, 0.3)'
-                          }}>
-                            {payment.status}
-                          </Badge>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div style={{ textAlign: 'center', padding: '2rem' }}>
-                    <CreditCard style={{ height: '3rem', width: '3rem', color: '#e5e7eb', margin: '0 auto' }} />
-                    <p style={{ color: '#e5e7eb' }}>No payment history</p>
-                  </div>
+                  <p className="text-center font-secondary text-sm text-muted-foreground/80">
+                    No payment history available yet.
+                  </p>
                 )}
               </CardContent>
             </Card>
           </div>
-        </div>
+        </section>
+      </div>
 
-        {/* Point History Dialog */}
-        <Dialog open={showPointHistory} onOpenChange={setShowPointHistory}>
-          <DialogContent className="bg-[#0a1a2f] border-[rgba(229,231,235,0.2)] text-white max-w-[600px]" style={{ backgroundColor: '#0a1a2f', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', maxWidth: '600px' }}>
-            <DialogHeader>
-              <DialogTitle style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>Point History</DialogTitle>
-              <DialogDescription style={{ color: '#e5e7eb', marginTop: '0.5rem' }}>
-                View your total points, earn, and redeem history
-              </DialogDescription>
-            </DialogHeader>
-            <div style={{ marginTop: '1.5rem' }}>
-              {/* Total Points Summary */}
-              <Card style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', marginBottom: '1.5rem' }}>
-                <CardContent style={{ padding: '1.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div>
-                      <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>Total Points</p>
-                      <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#d4af37' }}>
-                        {totalPoints.toLocaleString()}
-                      </div>
-                    </div>
-                    <Coins style={{ height: '3rem', width: '3rem', color: '#d4af37' }} />
-                  </div>
+      <Dialog open={showPointHistory} onOpenChange={setShowPointHistory}>
+        <DialogContent className="max-w-2xl border-qv-gold/25 bg-white/95 text-foreground shadow-qv-soft">
+          <DialogHeader>
+            <DialogTitle className="font-primary text-lg tracking-[0.28em] text-primary">
+              Loyalty Point History
+            </DialogTitle>
+            <DialogDescription className="font-secondary text-sm text-muted-foreground/80">
+              Review your earned and redeemed Quantum Vault loyalty points.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-6 space-y-6">
+            <Card className="border-qv-gold/25 bg-white/90 shadow-qv-soft">
+              <CardContent className="flex items-center justify-between gap-6 py-6">
+                <div>
+                  <p className="font-secondary text-sm text-muted-foreground/80">Total Points</p>
+                  <p className="font-primary text-3xl tracking-[0.24em] text-primary">
+                    {totalPoints.toLocaleString()}
+                  </p>
+                </div>
+                <Coins className="h-10 w-10 text-secondary" />
+              </CardContent>
+            </Card>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Card className="border-emerald-200 bg-emerald-50 text-emerald-800">
+                <CardContent className="py-5">
+                  <p className="font-secondary text-xs uppercase tracking-[0.3em]">Earned</p>
+                  <p className="mt-2 font-primary text-2xl tracking-[0.24em]">
+                    +{totalEarned.toLocaleString()}
+                  </p>
                 </CardContent>
               </Card>
-
-              {/* Point History List */}
-              <div style={{ marginTop: '1.5rem' }}>
-                <h3 style={{ fontSize: '1rem', fontWeight: '600', color: 'white', marginBottom: '1rem' }}>Transaction History</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
-                  {pointHistory.length > 0 ? (
-                    pointHistory.map((history) => (
-                      <div 
-                        key={history.id}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          padding: '1rem',
-                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          borderRadius: '0.5rem',
-                          border: '1px solid rgba(229, 231, 235, 0.1)'
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
-                          <div style={{
-                            padding: '0.5rem',
-                            backgroundColor: history.type === 'EARN' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                            borderRadius: '0.5rem'
-                          }}>
-                            {history.type === 'EARN' ? (
-                              <TrendingUp style={{ height: '1.25rem', width: '1.25rem', color: '#4ade80' }} />
-                            ) : (
-                              <TrendingDown style={{ height: '1.25rem', width: '1.25rem', color: '#f87171' }} />
-                            )}
-                          </div>
-                          <div style={{ flex: 1 }}>
-                            <h4 style={{ fontWeight: '500', color: 'white', marginBottom: '0.25rem' }}>
-                              {history.description}
-                            </h4>
-                            <p style={{ fontSize: '0.875rem', color: '#e5e7eb' }}>
-                              {new Date(history.date).toLocaleDateString()} • {new Date(history.date).toLocaleTimeString()}
-                            </p>
-                          </div>
-                        </div>
-                        <div style={{ 
-                          fontSize: '1.125rem', 
-                          fontWeight: 'bold',
-                          color: history.type === 'EARN' ? '#4ade80' : '#f87171'
-                        }}>
-                          {history.type === 'EARN' ? '+' : ''}{history.points.toLocaleString()}
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div style={{ textAlign: 'center', padding: '2rem', color: '#e5e7eb' }}>
-                      <Coins style={{ height: '3rem', width: '3rem', color: '#e5e7eb', margin: '0 auto 1rem', opacity: 0.5 }} />
-                      <p>No point history available</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Summary Stats */}
-              <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-                <Card style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', color: 'white' }}>
-                  <CardContent style={{ padding: '1rem' }}>
-                    <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>Total Earned</p>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#4ade80' }}>
-                      +{pointHistory.filter(h => h.type === 'EARN').reduce((sum, h) => sum + h.points, 0).toLocaleString()}
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: 'white' }}>
-                  <CardContent style={{ padding: '1rem' }}>
-                    <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>Total Redeemed</p>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#f87171' }}>
-                      {pointHistory.filter(h => h.type === 'REDEEM').reduce((sum, h) => sum + Math.abs(h.points), 0).toLocaleString()}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              <Card className="border-rose-200 bg-rose-50 text-rose-800">
+                <CardContent className="py-5">
+                  <p className="font-secondary text-xs uppercase tracking-[0.3em]">Redeemed</p>
+                  <p className="mt-2 font-primary text-2xl tracking-[0.24em]">
+                    -{totalRedeemed.toLocaleString()}
+                  </p>
+                </CardContent>
+              </Card>
             </div>
-          </DialogContent>
-        </Dialog>
 
-        {/* Coupon Dialog */}
-        <Dialog open={showCoupons} onOpenChange={setShowCoupons}>
-          <DialogContent className="bg-[#0a1a2f] border-[rgba(229,231,235,0.2)] text-white max-w-[700px]" style={{ backgroundColor: '#0a1a2f', border: '1px solid rgba(229, 231, 235, 0.2)', color: 'white', maxWidth: '700px' }}>
-            <DialogHeader>
-              <DialogTitle style={{ color: 'white', fontSize: '1.5rem', fontWeight: 'bold' }}>My Coupons</DialogTitle>
-              <DialogDescription style={{ color: '#e5e7eb', marginTop: '0.5rem' }}>
-                View and manage your coupons
-              </DialogDescription>
-            </DialogHeader>
-            <div style={{ marginTop: '1.5rem' }}>
-              {/* Filter Tabs */}
-              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-                {(['ALL', 'AVAILABLE', 'USED', 'EXPIRED', 'REDEEM'] as const).map((filter) => (
-                  <button
-                    key={filter}
-                    onClick={() => setCouponFilter(filter)}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      borderRadius: '0.375rem',
-                      border: '1px solid rgba(229, 231, 235, 0.2)',
-                      backgroundColor: couponFilter === filter ? '#d4af37' : 'transparent',
-                      color: couponFilter === filter ? '#0a1a2f' : '#e5e7eb',
-                      cursor: 'pointer',
-                      fontSize: '0.875rem',
-                      fontWeight: couponFilter === filter ? '600' : '400'
-                    }}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-
-              {/* Coupon List */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '500px', overflowY: 'auto' }}>
-                {coupons.filter(coupon => couponFilter === 'ALL' || coupon.status === couponFilter).length > 0 ? (
-                  coupons
-                    .filter(coupon => couponFilter === 'ALL' || coupon.status === couponFilter)
-                    .map((coupon) => {
-                      const getStatusColor = (status: string) => {
-                        switch (status) {
-                          case 'AVAILABLE': return { bg: 'rgba(34, 197, 94, 0.2)', color: '#4ade80', border: 'rgba(34, 197, 94, 0.3)' };
-                          case 'USED': return { bg: 'rgba(156, 163, 175, 0.2)', color: '#9ca3af', border: 'rgba(156, 163, 175, 0.3)' };
-                          case 'EXPIRED': return { bg: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: 'rgba(239, 68, 68, 0.3)' };
-                          case 'REDEEM': return { bg: 'rgba(234, 179, 8, 0.2)', color: '#facc15', border: 'rgba(234, 179, 8, 0.3)' };
-                          default: return { bg: 'rgba(229, 231, 235, 0.2)', color: '#e5e7eb', border: 'rgba(229, 231, 235, 0.3)' };
-                        }
-                      };
-                      const statusColor = getStatusColor(coupon.status);
-                      
-                      return (
-                        <Card 
-                          key={coupon.id}
-                          style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                            border: `1px solid ${statusColor.border}`,
-                            borderRadius: '0.5rem',
-                            padding: '1rem'
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between', gap: '1rem' }}>
-                            <div style={{ flex: 1 }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                                <h4 style={{ fontWeight: '600', color: 'white', fontSize: '1rem' }}>{coupon.name}</h4>
-                                <Badge style={{
-                                  backgroundColor: statusColor.bg,
-                                  color: statusColor.color,
-                                  border: `1px solid ${statusColor.border}`,
-                                  fontSize: '0.75rem',
-                                  padding: '0.25rem 0.5rem'
-                                }}>
-                                  {coupon.status}
-                                </Badge>
-                              </div>
-                              <p style={{ fontSize: '0.875rem', color: '#e5e7eb', marginBottom: '0.5rem' }}>
-                                {coupon.description}
-                              </p>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                  <span style={{ fontSize: '0.875rem', color: '#e5e7eb', fontWeight: '600' }}>Code:</span>
-                                  <span style={{ 
-                                    fontSize: '0.875rem', 
-                                    color: '#d4af37', 
-                                    fontWeight: 'bold',
-                                    fontFamily: 'monospace',
-                                    backgroundColor: 'rgba(212, 175, 55, 0.1)',
-                                    padding: '0.25rem 0.5rem',
-                                    borderRadius: '0.25rem'
-                                  }}>
-                                    {coupon.code}
-                                  </span>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                  <span style={{ fontSize: '0.875rem', color: '#e5e7eb' }}>Discount:</span>
-                                  <span style={{ fontSize: '0.875rem', color: '#d4af37', fontWeight: '600' }}>
-                                    {coupon.discount_type === 'PERCENTAGE' 
-                                      ? `${coupon.discount_value}%` 
-                                      : `${coupon.discount_value} THB`}
-                                  </span>
-                                </div>
-                              </div>
-                              {coupon.expiry_date && (
-                                <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.5rem' }}>
-                                  {coupon.status === 'EXPIRED' ? 'Expired' : 'Expires'}: {new Date(coupon.expiry_date).toLocaleDateString()}
-                                </p>
+            <div className="space-y-4">
+              <h3 className="font-primary text-sm tracking-[0.28em] text-primary">
+                Transaction History
+              </h3>
+              <div className="max-h-80 space-y-3 overflow-y-auto pr-2">
+                {pointHistory.length ? (
+                  pointHistory.map((history) => {
+                    const isEarn = history.type === 'EARN';
+                    return (
+                      <Card key={history.id} className="border-qv-gold/20 bg-white/90 shadow-sm">
+                        <CardContent className="flex items-center justify-between gap-4 py-4">
+                          <div className="flex items-center gap-4">
+                            <div
+                              className={cn(
+                                'rounded-xl p-3',
+                                isEarn ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
                               )}
-                              {coupon.used_date && (
-                                <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.5rem' }}>
-                                  Used: {new Date(coupon.used_date).toLocaleDateString()}
-                                </p>
-                              )}
-                              {coupon.redeem_date && (
-                                <p style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.5rem' }}>
-                                  Redeemed: {new Date(coupon.redeem_date).toLocaleDateString()}
-                                </p>
-                              )}
+                            >
+                              {isEarn ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
                             </div>
-                            <Ticket style={{ height: '2rem', width: '2rem', color: '#d4af37', opacity: 0.7 }} />
+                            <div>
+                              <p className="font-primary text-sm tracking-[0.18em] text-primary">
+                                {history.description}
+                              </p>
+                              <p className="font-secondary text-xs text-muted-foreground/70">
+                                {new Date(history.date).toLocaleDateString()} ·{' '}
+                                {new Date(history.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </p>
+                            </div>
                           </div>
-                        </Card>
-                      );
-                    })
+                          <span
+                            className={cn(
+                              'font-primary text-sm tracking-[0.18em]',
+                              isEarn ? 'text-emerald-700' : 'text-rose-700'
+                            )}
+                          >
+                            {isEarn ? '+' : ''}
+                            {history.points.toLocaleString()}
+                          </span>
+                        </CardContent>
+                      </Card>
+                    );
+                  })
                 ) : (
-                  <div style={{ textAlign: 'center', padding: '2rem', color: '#e5e7eb' }}>
-                    <Ticket style={{ height: '3rem', width: '3rem', color: '#e5e7eb', margin: '0 auto 1rem', opacity: 0.5 }} />
-                    <p>No {couponFilter === 'ALL' ? '' : couponFilter.toLowerCase()} coupons available</p>
+                  <div className="rounded-xl border border-dashed border-qv-gold/30 bg-white/70 p-12 text-center">
+                    <Coins className="mx-auto h-12 w-12 text-muted-foreground/60" />
+                    <p className="mt-4 font-secondary text-sm text-muted-foreground/80">
+                      No point history available.
+                    </p>
                   </div>
                 )}
               </div>
-
-              {/* Summary Stats */}
-              <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
-                <Card style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', color: 'white' }}>
-                  <CardContent style={{ padding: '0.75rem' }}>
-                    <p style={{ fontSize: '0.75rem', color: '#e5e7eb', marginBottom: '0.25rem' }}>Available</p>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#4ade80' }}>
-                      {coupons.filter(c => c.status === 'AVAILABLE').length}
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card style={{ backgroundColor: 'rgba(156, 163, 175, 0.1)', border: '1px solid rgba(156, 163, 175, 0.3)', color: 'white' }}>
-                  <CardContent style={{ padding: '0.75rem' }}>
-                    <p style={{ fontSize: '0.75rem', color: '#e5e7eb', marginBottom: '0.25rem' }}>Used</p>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#9ca3af' }}>
-                      {coupons.filter(c => c.status === 'USED').length}
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: 'white' }}>
-                  <CardContent style={{ padding: '0.75rem' }}>
-                    <p style={{ fontSize: '0.75rem', color: '#e5e7eb', marginBottom: '0.25rem' }}>Expired</p>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#f87171' }}>
-                      {coupons.filter(c => c.status === 'EXPIRED').length}
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card style={{ backgroundColor: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.3)', color: 'white' }}>
-                  <CardContent style={{ padding: '0.75rem' }}>
-                    <p style={{ fontSize: '0.75rem', color: '#e5e7eb', marginBottom: '0.25rem' }}>Redeem</p>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#facc15' }}>
-                      {coupons.filter(c => c.status === 'REDEEM').length}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showCoupons} onOpenChange={setShowCoupons}>
+        <DialogContent className="max-w-3xl border-qv-gold/25 bg-white/95 text-foreground shadow-qv-soft">
+          <DialogHeader>
+            <DialogTitle className="font-primary text-lg tracking-[0.28em] text-primary">
+              My Coupons
+            </DialogTitle>
+            <DialogDescription className="font-secondary text-sm text-muted-foreground/80">
+              Exclusive incentives and rewards curated for your Quantum Vault membership.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="mt-6 space-y-6">
+            <div className="flex flex-wrap gap-2">
+              {(['ALL', 'AVAILABLE', 'USED', 'EXPIRED', 'REDEEM'] as CouponFilter[]).map((filter) => (
+                <Button
+                  key={filter}
+                  variant={couponFilter === filter ? 'secondary' : 'outline'}
+                  onClick={() => setCouponFilter(filter)}
+                  className={cn(
+                    'rounded-full px-4 py-2 text-xs font-primary tracking-[0.24em]',
+                    couponFilter === filter
+                      ? 'bg-qv-gold/90 text-white hover:bg-qv-gold'
+                      : 'border-qv-gold/30 text-primary hover:bg-qv-gold/10'
+                  )}
+                >
+                  {filter}
+                </Button>
+              ))}
+            </div>
+
+            <div className="max-h-[420px] space-y-4 overflow-y-auto pr-2">
+              {filteredCoupons.length ? (
+                filteredCoupons.map((coupon) => {
+                  const tone = couponStatusTone[coupon.status];
+                  return (
+                    <Card key={coupon.id} className="border-qv-gold/20 bg-white/90 shadow-sm">
+                      <CardContent className="flex flex-col gap-3 py-5 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="space-y-2">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <h4 className="font-primary text-base tracking-[0.2em] text-primary uppercase">
+                              {coupon.name}
+                            </h4>
+                            <Badge
+                              className={cn(
+                                'rounded-full px-3 py-1 text-xs font-medium',
+                                tone.bg,
+                                tone.text,
+                                tone.border,
+                                'border'
+                              )}
+                            >
+                              {coupon.status}
+                            </Badge>
+                          </div>
+                          <p className="font-secondary text-sm text-muted-foreground/80">
+                            {coupon.description}
+                          </p>
+                          <div className="flex flex-wrap items-center gap-4 text-sm">
+                            <span className="font-secondary text-muted-foreground/70">
+                              Discount:{' '}
+                              <span className="font-primary text-sm tracking-[0.18em] text-primary">
+                                {coupon.discount_type === 'PERCENTAGE'
+                                  ? `${coupon.discount_value}%`
+                                  : `${coupon.discount_value.toLocaleString()} THB`}
+                              </span>
+                            </span>
+                            <span className="font-secondary text-muted-foreground/70">
+                              Code:{' '}
+                              <span className="rounded-md border border-qv-gold/30 bg-qv-gold/10 px-2 py-0.5 font-mono text-xs text-secondary">
+                                {coupon.code}
+                              </span>
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-4 text-xs text-muted-foreground/70">
+                            {coupon.expiry_date && (
+                              <span>
+                                {coupon.status === 'EXPIRED' ? 'Expired' : 'Expires'}:{' '}
+                                {new Date(coupon.expiry_date).toLocaleDateString()}
+                              </span>
+                            )}
+                            {coupon.used_date && (
+                              <span>
+                                Used: {new Date(coupon.used_date).toLocaleDateString()}
+                              </span>
+                            )}
+                            {coupon.redeem_date && (
+                              <span>
+                                Redeemed: {new Date(coupon.redeem_date).toLocaleDateString()}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <Ticket className="h-10 w-10 text-secondary" />
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              ) : (
+                <div className="rounded-xl border border-dashed border-qv-gold/30 bg-white/70 p-12 text-center">
+                  <Ticket className="mx-auto h-12 w-12 text-muted-foreground/60" />
+                  <p className="mt-4 font-secondary text-sm text-muted-foreground/80">
+                    No {couponFilter === 'ALL' ? '' : couponFilter.toLowerCase()} coupons available right now.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-4">
+              {Object.entries(couponStatusTone).map(([status, tone]) => (
+                <Card
+                  key={status}
+                  className={cn('shadow-sm', tone.bg, tone.text, tone.border, 'border rounded-2xl')}
+                >
+                  <CardContent className="py-4 text-center">
+                    <p className="font-secondary text-xs uppercase tracking-[0.3em]">
+                      {status}
+                    </p>
+                    <p className="mt-2 font-primary text-lg tracking-[0.18em]">
+                      {coupons.filter((coupon) => coupon.status === status).length}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

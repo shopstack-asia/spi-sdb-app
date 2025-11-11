@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,17 +9,18 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  Shield, 
-  Calendar as CalendarIcon, 
-  Clock, 
-  Users, 
+import {
+  Shield,
+  Calendar as CalendarIcon,
+  Clock,
+  Users,
   MapPin,
   Plus,
   ArrowLeft
 } from "lucide-react";
 import { format } from "date-fns";
 import { SDBFacility, SDBBooking } from "@/types";
+import logoDark from "@/../public/qv_logo_h_white_bk.png";
 
 // Mock data
 const mockFacilities: SDBFacility[] = [
@@ -135,49 +137,52 @@ export default function BookingPage() {
     : bookings.filter(booking => booking.facility_id === selectedFacility);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark">
+    <div className="min-h-screen bg-gradient-to-br from-white via-qv-ivory/75 to-qv-gold/25">
       {/* Navigation */}
-      <nav className="border-b border-spi-silver/20 bg-spi-navy/95 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center">
-              <Shield className="h-8 w-8 text-spi-gold" />
-              <span className="ml-2 text-xl font-bold text-white">SPI Safe Deposit</span>
+      <nav className="border-b border-qv-gold/30 bg-white/85 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-3">
+            <Image src={logoDark} alt="Quantum Vault" width={160} height={44} className="h-10 w-auto" />
+          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/member">
+              <Button variant="ghost" className="font-primary text-[0.68rem] uppercase tracking-[0.28em] text-primary hover:bg-qv-gold/20">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Dashboard
+              </Button>
             </Link>
-            <div className="flex items-center space-x-4">
-              <Link href="/member">
-                <Button variant="ghost" className="text-white hover:bg-spi-silver/20">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Dashboard
-                </Button>
-              </Link>
-            </div>
+            <Link href="/booking/new">
+              <Button size="sm" className="hidden sm:flex">
+                <Plus className="mr-2 h-4 w-4" />
+                New Booking
+              </Button>
+            </Link>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">
+          <h1 className="font-primary text-3xl tracking-[0.2em] text-primary mb-2 uppercase">
             Facility Booking
           </h1>
-          <p className="text-spi-silver">
+          <p className="font-secondary text-muted-foreground/90">
             Book meeting rooms, conference facilities, and vault access
           </p>
         </div>
 
         {/* Filters */}
         <div className="mb-8">
-          <Card className="bg-white/10 border-spi-silver/20 text-white">
+          <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
             <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col gap-4 md:flex-row">
                 <div className="flex-1">
-                  <label className="text-sm font-medium text-white mb-2 block">
+                  <label className="mb-2 block font-primary text-[0.68rem] uppercase tracking-[0.28em] text-muted-foreground/80">
                     Filter by Facility
                   </label>
                   <Select value={selectedFacility} onValueChange={setSelectedFacility}>
-                    <SelectTrigger className="bg-white/10 border-spi-silver/20 text-white">
+                    <SelectTrigger>
                       <SelectValue placeholder="All facilities" />
                     </SelectTrigger>
                     <SelectContent>
@@ -191,14 +196,14 @@ export default function BookingPage() {
                   </Select>
                 </div>
                 <div className="flex-1">
-                  <label className="text-sm font-medium text-white mb-2 block">
+                  <label className="mb-2 block font-primary text-[0.68rem] uppercase tracking-[0.28em] text-muted-foreground/80">
                     Select Date
                   </label>
                   <Popover open={showCalendar} onOpenChange={setShowCalendar}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left bg-white/10 border-spi-silver/20 text-white hover:bg-white/20"
+                        className="w-full justify-start text-left border-qv-gold/30 text-primary hover:bg-qv-gold/10"
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
@@ -219,8 +224,8 @@ export default function BookingPage() {
                 </div>
                 <div className="flex items-end">
                   <Link href="/booking/new">
-                    <Button className="bg-spi-gold hover:bg-spi-gold/90 text-spi-navy">
-                      <Plus className="h-4 w-4 mr-2" />
+                    <Button variant="secondary" className="px-6">
+                      <Plus className="mr-2 h-4 w-4" />
                       New Booking
                     </Button>
                   </Link>
@@ -234,16 +239,16 @@ export default function BookingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {filteredBookings.length > 0 ? (
             filteredBookings.map((booking) => (
-              <Card key={booking.id} className="bg-white/10 border-spi-silver/20 text-white">
+              <Card key={booking.id} className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-spi-gold/20 rounded-lg">
+                      <div className="rounded-xl border border-qv-gold/30 bg-qv-gold/10 p-2 text-secondary">
                         {getFacilityTypeIcon(booking.facility.type)}
                       </div>
                       <div>
-                        <CardTitle className="text-white">{booking.facility.name}</CardTitle>
-                        <CardDescription className="text-spi-silver">
+                        <CardTitle className="text-primary">{booking.facility.name}</CardTitle>
+                        <CardDescription className="text-muted-foreground/80">
                           {booking.facility.description}
                         </CardDescription>
                       </div>
@@ -257,50 +262,50 @@ export default function BookingPage() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <CalendarIcon className="h-4 w-4 text-spi-silver" />
-                        <span className="text-spi-silver">Date:</span>
+                        <CalendarIcon className="h-4 w-4 text-muted-foreground/70" />
+                        <span className="text-muted-foreground/80">Date:</span>
                       </div>
-                      <span className="text-white">
+                      <span className="text-foreground font-medium">
                         {new Date(booking.booking_date).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-spi-silver" />
-                        <span className="text-spi-silver">Time:</span>
+                        <Clock className="h-4 w-4 text-muted-foreground/70" />
+                        <span className="text-muted-foreground/80">Time:</span>
                       </div>
-                      <span className="text-white">
+                      <span className="text-foreground font-medium">
                         {booking.start_time} - {booking.end_time}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Users className="h-4 w-4 text-spi-silver" />
-                        <span className="text-spi-silver">Purpose:</span>
+                        <Users className="h-4 w-4 text-muted-foreground/70" />
+                        <span className="text-muted-foreground/80">Purpose:</span>
                       </div>
-                      <span className="text-white">{booking.purpose}</span>
+                      <span className="text-foreground">{booking.purpose}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <span className="text-spi-silver">Cost:</span>
+                        <span className="text-muted-foreground/80">Cost:</span>
                       </div>
-                      <span className="text-white font-medium">
+                      <span className="text-foreground font-semibold">
                         {booking.total_cost.toLocaleString()} {booking.currency}
                       </span>
                     </div>
                     {booking.visitors && booking.visitors.length > 0 && (
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <Users className="h-4 w-4 text-spi-silver" />
-                          <span className="text-spi-silver">Visitors:</span>
+                          <Users className="h-4 w-4 text-muted-foreground/70" />
+                          <span className="text-muted-foreground/80">Visitors:</span>
                         </div>
-                        <span className="text-white">{booking.visitors.length} visitor(s)</span>
+                        <span className="text-foreground">{booking.visitors.length} visitor(s)</span>
                       </div>
                     )}
                   </div>
                   <div className="flex justify-end mt-4">
                     <Link href={`/booking/${booking.id}`}>
-                      <Button variant="outline" className="border-spi-silver text-spi-silver hover:bg-spi-silver/10">
+                      <Button variant="outline" className="border-qv-gold/30 text-primary hover:bg-qv-gold/10">
                         View Details
                       </Button>
                     </Link>
@@ -309,20 +314,20 @@ export default function BookingPage() {
               </Card>
             ))
           ) : (
-            <div className="col-span-full">
-              <Card className="bg-white/10 border-spi-silver/20 text-white">
-                <CardContent className="text-center py-12">
-                  <CalendarIcon className="h-12 w-12 text-spi-silver mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-white mb-2">No bookings found</h3>
-                  <p className="text-spi-silver mb-6">
+             <div className="col-span-full">
+              <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
+                <CardContent className="py-12 text-center">
+                  <CalendarIcon className="mx-auto mb-4 h-12 w-12 text-muted-foreground/70" />
+                  <h3 className="font-primary text-lg tracking-[0.2em] text-primary mb-2 uppercase">No bookings found</h3>
+                  <p className="font-secondary text-muted-foreground/85 mb-6">
                     {selectedFacility !== "all"
                       ? "No bookings found for the selected facility and date."
                       : "You don't have any bookings yet."
                     }
                   </p>
                   <Link href="/booking/new">
-                    <Button className="bg-spi-gold hover:bg-spi-gold/90 text-spi-navy">
-                      <Plus className="h-4 w-4 mr-2" />
+                    <Button variant="secondary" className="px-6">
+                      <Plus className="mr-2 h-4 w-4" />
                       Create Your First Booking
                     </Button>
                   </Link>
@@ -334,18 +339,18 @@ export default function BookingPage() {
 
         {/* Available Facilities */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-white mb-6">Available Facilities</h2>
+          <h2 className="font-primary text-2xl tracking-[0.2em] text-primary uppercase mb-6">Available Facilities</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {facilities.map((facility) => (
-              <Card key={facility.id} className="bg-white/10 border-spi-silver/20 text-white">
+              <Card key={facility.id} className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
                 <CardHeader>
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-spi-gold/20 rounded-lg">
+                    <div className="rounded-xl border border-qv-gold/30 bg-qv-gold/10 p-2 text-secondary">
                       {getFacilityTypeIcon(facility.type)}
                     </div>
                     <div>
-                      <CardTitle className="text-white">{facility.name}</CardTitle>
-                      <CardDescription className="text-spi-silver">
+                      <CardTitle className="text-primary">{facility.name}</CardTitle>
+                      <CardDescription className="text-muted-foreground/80">
                         {facility.type.replace('_', ' ')}
                       </CardDescription>
                     </div>
@@ -354,22 +359,22 @@ export default function BookingPage() {
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-spi-silver">Capacity:</span>
-                      <span className="text-white">{facility.capacity} people</span>
+                      <span className="text-muted-foreground/80">Capacity:</span>
+                      <span className="text-foreground font-medium">{facility.capacity} people</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-spi-silver">Rate:</span>
-                      <span className="text-white font-medium">
+                      <span className="text-muted-foreground/80">Rate:</span>
+                      <span className="text-foreground font-semibold">
                         {facility.hourly_rate.toLocaleString()} {facility.currency}/hour
                       </span>
                     </div>
-                    <p className="text-sm text-spi-silver mt-3">
+                    <p className="mt-3 text-sm text-muted-foreground/85">
                       {facility.description}
                     </p>
                   </div>
                   <div className="mt-4">
                     <Link href={`/booking/new?facility=${facility.id}`}>
-                      <Button className="w-full bg-spi-gold hover:bg-spi-gold/90 text-spi-navy">
+                      <Button variant="secondary" className="w-full">
                         Book Now
                       </Button>
                     </Link>

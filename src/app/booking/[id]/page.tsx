@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,6 +31,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { SDBBooking } from "@/types";
+import logoDark from "@/../public/qv_logo_h_white_bk.png";
 
 const visitorSchema = z.object({
   full_name: z.string().min(2, "Full name is required"),
@@ -197,55 +199,61 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark flex items-center justify-center">
-        <div className="text-white">Loading booking details...</div>
+     return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/25">
+        <p className="font-secondary text-muted-foreground/80">Loading booking details…</p>
       </div>
     );
   }
-
+ 
   if (!booking) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark flex items-center justify-center">
-        <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-spi-silver mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-white mb-2">Booking Not Found</h2>
-          <p className="text-spi-silver mb-4">The booking you&apos;re looking for doesn&apos;t exist.</p>
-          <Button onClick={() => router.push("/booking")} className="bg-spi-gold hover:bg-spi-gold/90 text-spi-navy">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/25">
+        <div className="rounded-3xl border border-qv-gold/30 bg-white/90 p-10 text-center shadow-qv-soft">
+          <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground/70" />
+          <h2 className="font-primary text-lg tracking-[0.28em] text-primary">
+            Booking Not Found
+          </h2>
+          <p className="mt-2 font-secondary text-sm text-muted-foreground/80">
+            The booking you&apos;re looking for doesn&apos;t exist.
+          </p>
+          <Button onClick={() => router.push("/booking")} variant="secondary" className="mt-6 px-6">
             Back to Bookings
           </Button>
         </div>
       </div>
     );
   }
-
+ 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-spi-navy via-spi-navy to-spi-dark">
+    <div className="min-h-screen bg-gradient-to-br from-white via-qv-ivory/75 to-qv-gold/25">
       {/* Navigation */}
-      <nav className="border-b border-spi-silver/20 bg-spi-navy/95 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Shield className="h-8 w-8 text-spi-gold" />
-              <span className="ml-2 text-xl font-bold text-white">SPI Safe Deposit</span>
-            </div>
-            <Button variant="ghost" onClick={() => router.back()} className="text-white hover:bg-spi-silver/20">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-          </div>
+      <nav className="border-b border-qv-gold/30 bg-white/85 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Image src={logoDark} alt="Quantum Vault" width={160} height={44} className="h-10 w-auto" />
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="font-primary text-[0.68rem] uppercase tracking-[0.28em] text-primary hover:bg-qv-gold/10"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
         </div>
       </nav>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+ 
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">
+        <div className="mb-10">
+          <div className="flex flex-wrap items-start justify-between gap-6">
+            <div className="space-y-3">
+              <p className="font-primary text-xs uppercase tracking-[0.3em] text-secondary">
+                Booking Reference
+              </p>
+              <h1 className="font-primary text-3xl tracking-[0.24em] text-primary">
                 Booking Details
               </h1>
-              <p className="text-spi-silver">
+              <p className="font-secondary text-base text-muted-foreground/90">
                 {booking.facility.name} • {new Date(booking.booking_date).toLocaleDateString()}
               </p>
             </div>
@@ -256,7 +264,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
               <Button
                 variant="outline"
                 onClick={() => setIsEditing(!isEditing)}
-                className="border-spi-silver text-spi-silver hover:bg-spi-silver/10"
+                className="border-qv-gold/30 text-primary hover:bg-qv-gold/10"
               >
                 <Edit className="h-4 w-4 mr-2" />
                 {isEditing ? "Cancel" : "Edit"}
@@ -266,63 +274,76 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="bg-white/10 border-spi-silver/20">
-            <TabsTrigger value="overview" className="text-white data-[state=active]:bg-spi-gold data-[state=active]:text-spi-navy">
+          <TabsList className="inline-flex rounded-full border border-qv-gold/30 bg-white/80 p-1 shadow-sm">
+            <TabsTrigger
+              value="overview"
+              className="rounded-full px-4 py-2 font-primary text-[0.68rem] uppercase tracking-[0.28em] text-muted-foreground/80 transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
               Overview
             </TabsTrigger>
-            <TabsTrigger value="visitors" className="text-white data-[state=active]:bg-spi-gold data-[state=active]:text-spi-navy">
+            <TabsTrigger
+              value="visitors"
+              className="rounded-full px-4 py-2 font-primary text-[0.68rem] uppercase tracking-[0.28em] text-muted-foreground/80 transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
               Visitors ({booking.visitors.length})
             </TabsTrigger>
-            <TabsTrigger value="add-visitor" className="text-white data-[state=active]:bg-spi-gold data-[state=active]:text-spi-navy">
+            <TabsTrigger
+              value="add-visitor"
+              className="rounded-full px-4 py-2 font-primary text-[0.68rem] uppercase tracking-[0.28em] text-muted-foreground/80 transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            >
               Add Visitor
             </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {/* Booking Information */}
-              <Card className="bg-white/10 border-spi-silver/20 text-white">
+              <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
                 <CardHeader>
-                  <CardTitle className="text-white">Booking Information</CardTitle>
+                  <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                    Booking Information
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <MapPin className="h-4 w-4 text-spi-silver" />
-                      <span className="text-spi-silver">Facility:</span>
+                      <MapPin className="h-4 w-4 text-muted-foreground/70" />
+                      <span className="font-secondary text-sm text-muted-foreground/80">Facility:</span>
                     </div>
-                    <span className="text-white font-medium">{booking.facility.name}</span>
+                    <span className="font-primary text-sm tracking-[0.18em] text-primary">
+                      {booking.facility.name}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <CalendarIcon className="h-4 w-4 text-spi-silver" />
-                      <span className="text-spi-silver">Date:</span>
+                      <CalendarIcon className="h-4 w-4 text-muted-foreground/70" />
+                      <span className="font-secondary text-sm text-muted-foreground/80">Date:</span>
                     </div>
-                    <span className="text-white">
+                    <span className="font-secondary text-sm text-primary">
                       {new Date(booking.booking_date).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <Clock className="h-4 w-4 text-spi-silver" />
-                      <span className="text-spi-silver">Time:</span>
+                      <Clock className="h-4 w-4 text-muted-foreground/70" />
+                      <span className="font-secondary text-sm text-muted-foreground/80">Time:</span>
                     </div>
-                    <span className="text-white">
+                    <span className="font-secondary text-sm text-primary">
                       {booking.start_time} - {booking.end_time}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="text-spi-silver">Purpose:</span>
+                      <span className="font-secondary text-sm text-muted-foreground/80">Purpose:</span>
                     </div>
-                    <span className="text-white">{booking.purpose}</span>
+                    <span className="font-secondary text-sm text-primary">{booking.purpose}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="text-spi-silver">Cost:</span>
+                      <span className="font-secondary text-sm text-muted-foreground/80">Cost:</span>
                     </div>
-                    <span className="text-white font-medium">
+                    <span className="font-primary text-sm tracking-[0.18em] text-secondary">
                       {booking.total_cost.toLocaleString()} {booking.currency}
                     </span>
                   </div>
@@ -330,27 +351,35 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
               </Card>
 
               {/* Facility Information */}
-              <Card className="bg-white/10 border-spi-silver/20 text-white">
+              <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
                 <CardHeader>
-                  <CardTitle className="text-white">Facility Details</CardTitle>
+                  <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                    Facility Details
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-spi-silver">Type:</span>
-                    <span className="text-white">{booking.facility.type.replace('_', ' ')}</span>
+                    <span className="font-secondary text-sm text-muted-foreground/80">Type:</span>
+                    <span className="font-secondary text-sm text-primary">
+                      {booking.facility.type.replace('_', ' ')}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-spi-silver">Capacity:</span>
-                    <span className="text-white">{booking.facility.capacity} people</span>
+                    <span className="font-secondary text-sm text-muted-foreground/80">Capacity:</span>
+                    <span className="font-secondary text-sm text-primary">
+                      {booking.facility.capacity} people
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-spi-silver">Hourly Rate:</span>
-                    <span className="text-white">
+                    <span className="font-secondary text-sm text-muted-foreground/80">Hourly Rate:</span>
+                    <span className="font-primary text-sm tracking-[0.18em] text-primary">
                       {booking.facility.hourly_rate.toLocaleString()} {booking.facility.currency}/hour
                     </span>
                   </div>
                   <div className="mt-4">
-                    <p className="text-sm text-spi-silver">{booking.facility.description}</p>
+                    <p className="font-secondary text-sm text-muted-foreground/80">
+                      {booking.facility.description}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -359,21 +388,26 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
 
           {/* Visitors Tab */}
           <TabsContent value="visitors" className="space-y-6">
-            <Card className="bg-white/10 border-spi-silver/20 text-white">
+            <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
               <CardHeader>
-                <CardTitle className="text-white">Visitor Management</CardTitle>
-                <CardDescription className="text-spi-silver">
+                <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                  Visitor Management
+                </CardTitle>
+                <CardDescription className="font-secondary text-sm text-muted-foreground/80">
                   Manage visitors for this booking
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {booking.visitors.length === 0 ? (
-                  <div className="text-center py-8">
-                    <Users className="h-12 w-12 text-spi-silver mx-auto mb-4" />
-                    <p className="text-spi-silver mb-4">No visitors added yet</p>
+                  <div className="py-10 text-center">
+                    <Users className="mx-auto mb-4 h-12 w-12 text-muted-foreground/60" />
+                    <p className="font-secondary text-sm text-muted-foreground/80">
+                      No visitors added yet
+                    </p>
                     <Button
                       onClick={() => setIsEditing(true)}
-                      className="bg-spi-gold hover:bg-spi-gold/90 text-spi-navy"
+                      variant="secondary"
+                      className="mt-4 px-6"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Add Visitor
@@ -382,11 +416,16 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                 ) : (
                   <div className="space-y-4">
                     {booking.visitors.map((visitor) => (
-                      <div key={visitor.id} className="p-4 bg-white/5 rounded-lg border border-spi-silver/20">
-                        <div className="flex items-center justify-between mb-4">
+                      <div
+                        key={visitor.id}
+                        className="rounded-2xl border border-qv-gold/20 bg-white/80 p-4 shadow-sm"
+                      >
+                        <div className="mb-4 flex items-center justify-between">
                           <div>
-                            <h4 className="text-white font-medium">{visitor.full_name}</h4>
-                            <p className="text-sm text-spi-silver">
+                            <h4 className="font-primary text-sm tracking-[0.2em] text-primary uppercase">
+                              {visitor.full_name}
+                            </h4>
+                            <p className="font-secondary text-sm text-muted-foreground/80">
                               {visitor.id_type} • {visitor.id_number}
                             </p>
                           </div>
@@ -399,7 +438,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                                 onClick={() => handleRemoveVisitor(visitor.id)}
                                 variant="ghost"
                                 size="sm"
-                                className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                                className="text-rose-500 hover:bg-rose-100 hover:text-rose-700"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -407,27 +446,27 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                           </div>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                           <div>
-                            <span className="text-spi-silver">Relationship:</span>
-                            <span className="text-white ml-2">{visitor.relationship}</span>
+                            <span className="font-secondary text-muted-foreground/70">Relationship:</span>
+                            <span className="ml-2 font-secondary text-primary">{visitor.relationship}</span>
                           </div>
                           <div>
-                            <span className="text-spi-silver">Purpose:</span>
-                            <span className="text-white ml-2">{visitor.visit_purpose}</span>
+                            <span className="font-secondary text-muted-foreground/70">Purpose:</span>
+                            <span className="ml-2 font-secondary text-primary">{visitor.visit_purpose}</span>
                           </div>
                           {visitor.check_in_time && (
                             <div>
-                              <span className="text-spi-silver">Check-in:</span>
-                              <span className="text-white ml-2">
+                              <span className="font-secondary text-muted-foreground/70">Check-in:</span>
+                              <span className="ml-2 font-secondary text-primary">
                                 {new Date(visitor.check_in_time).toLocaleString()}
                               </span>
                             </div>
                           )}
                           {visitor.check_out_time && (
                             <div>
-                              <span className="text-spi-silver">Check-out:</span>
-                              <span className="text-white ml-2">
+                              <span className="font-secondary text-muted-foreground/70">Check-out:</span>
+                              <span className="ml-2 font-secondary text-primary">
                                 {new Date(visitor.check_out_time).toLocaleString()}
                               </span>
                             </div>
@@ -439,7 +478,8 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                             <Button
                               onClick={() => handleCheckIn(visitor.id)}
                               size="sm"
-                              className="bg-green-600 hover:bg-green-700 text-white"
+                              variant="secondary"
+                              className="bg-emerald-600 hover:bg-emerald-700"
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Check In
@@ -453,7 +493,7 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                               onClick={() => handleCheckOut(visitor.id)}
                               size="sm"
                               variant="outline"
-                              className="border-spi-silver text-spi-silver hover:bg-spi-silver/10"
+                              className="border-qv-gold/30 text-primary hover:bg-qv-gold/10"
                             >
                               Check Out
                             </Button>
@@ -469,11 +509,13 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
 
           {/* Add Visitor Tab */}
           <TabsContent value="add-visitor" className="space-y-6">
-            <Card className="bg-white/10 border-spi-silver/20 text-white">
+            <Card className="border-qv-gold/25 bg-white/90 text-foreground shadow-qv-soft">
               <CardHeader>
-                <CardTitle className="text-white">Add New Visitor</CardTitle>
-                <CardDescription className="text-spi-silver">
-                  Add a visitor to this booking
+                <CardTitle className="font-primary text-sm tracking-[0.3em] text-primary">
+                  Add New Visitor
+                </CardTitle>
+                <CardDescription className="font-secondary text-sm text-muted-foreground/80">
+                  Record visitor information for secure access management
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -485,13 +527,9 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                         name="full_name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">Full Name</FormLabel>
+                            <FormLabel className="text-primary">Full Name</FormLabel>
                             <FormControl>
-                              <Input
-                                className="bg-white/10 border-spi-silver/20 text-white placeholder:text-spi-silver"
-                                placeholder="Enter full name"
-                                {...field}
-                              />
+                              <Input placeholder="Enter full name" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -503,10 +541,10 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                         name="id_type"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">ID Type</FormLabel>
+                            <FormLabel className="text-primary">ID Type</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
-                                <SelectTrigger className="bg-white/10 border-spi-silver/20 text-white">
+                                <SelectTrigger>
                                   <SelectValue placeholder="Select ID type" />
                                 </SelectTrigger>
                               </FormControl>
@@ -526,13 +564,9 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                         name="id_number"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">ID Number</FormLabel>
+                            <FormLabel className="text-primary">ID Number</FormLabel>
                             <FormControl>
-                              <Input
-                                className="bg-white/10 border-spi-silver/20 text-white placeholder:text-spi-silver"
-                                placeholder="Enter ID number"
-                                {...field}
-                              />
+                              <Input placeholder="Enter ID number" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -544,10 +578,9 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                         name="relationship"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white">Relationship</FormLabel>
+                            <FormLabel className="text-primary">Relationship</FormLabel>
                             <FormControl>
                               <Input
-                                className="bg-white/10 border-spi-silver/20 text-white placeholder:text-spi-silver"
                                 placeholder="e.g., Colleague, Client, Family"
                                 {...field}
                               />
@@ -562,10 +595,10 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                         name="visit_purpose"
                         render={({ field }) => (
                           <FormItem className="md:col-span-2">
-                            <FormLabel className="text-white">Visit Purpose</FormLabel>
+                            <FormLabel className="text-primary">Visit Purpose</FormLabel>
                             <FormControl>
                               <Textarea
-                                className="bg-white/10 border-spi-silver/20 text-white placeholder:text-spi-silver"
+                                className="min-h-[120px]"
                                 placeholder="Describe the purpose of their visit..."
                                 {...field}
                               />
@@ -576,32 +609,22 @@ export default function BookingDetailPage({ params }: { params: Promise<{ id: st
                       />
                     </div>
 
-                    <div className="flex justify-end space-x-4">
+                    <div className="flex justify-end space-x-3">
                       <Button
                         type="button"
                         variant="outline"
                         onClick={() => form.reset()}
-                        className="border-spi-silver text-spi-silver hover:bg-spi-silver/10"
+                        className="border-qv-gold/30 text-primary hover:bg-qv-gold/10"
                       >
-                        <X className="h-4 w-4 mr-2" />
-                        Cancel
+                        Reset
                       </Button>
                       <Button
                         type="submit"
                         disabled={isSaving}
-                        className="bg-spi-gold hover:bg-spi-gold/90 text-spi-navy"
+                        variant="secondary"
+                        className="px-6"
                       >
-                        {isSaving ? (
-                          <>
-                            <Save className="h-4 w-4 mr-2" />
-                            Adding Visitor...
-                          </>
-                        ) : (
-                          <>
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Visitor
-                          </>
-                        )}
+                        {isSaving ? "Saving..." : "Add Visitor"}
                       </Button>
                     </div>
                   </form>

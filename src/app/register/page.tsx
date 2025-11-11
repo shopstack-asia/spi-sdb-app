@@ -4,17 +4,18 @@ import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import ClientRegisterForm from "./client-register-form";
+import logoDark from "@/../public/qv_logo_h_white_bk.png";
 
 export default function RegisterPage() {
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-qv-midnight-gradient px-6 py-16">
-      <div className="pointer-events-none absolute inset-0 -z-10 quantum-curve opacity-80" />
-      <div className="w-full max-w-3xl space-y-10">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-white via-qv-ivory/80 to-qv-gold/40 px-6 py-20">
+      <div className="pointer-events-none absolute inset-0 -z-10 seed-pod-pattern opacity-70" />
+      <div className="w-full max-w-3xl space-y-10 rounded-3xl border border-qv-gold/30 bg-white/85 p-12 shadow-qv-soft backdrop-blur-xl">
         <div>
           <Link href="/">
             <Button
               variant="ghost"
-              className="font-primary text-[0.62rem] uppercase tracking-[0.3em] text-muted-foreground/80 hover:text-primary"
+              className="font-primary text-[0.62rem] uppercase tracking-[0.3em] text-primary/70 hover:text-primary"
             >
               <ArrowLeft className="mr-3 h-4 w-4" />
               Return to Vault
@@ -23,18 +24,11 @@ export default function RegisterPage() {
         </div>
 
         <div className="text-center">
-          <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-qv-gold/50 bg-white/5 shadow-qv-gold">
-            <Image
-              src="/qv_logo_white_bk.png"
-              alt="Quantum Vault Logo"
-              width={90}
-              height={90}
-            />
-          </div>
-          <h1 className="font-primary text-2xl tracking-[0.3em] text-secondary-foreground">
+          <Image src={logoDark} alt="Quantum Vault Logo" width={200} height={56} className="mx-auto h-14 w-auto" />
+          <h1 className="mt-6 font-primary text-2xl tracking-[0.3em] text-primary">
             Membership Covenant
           </h1>
-          <p className="mt-3 font-secondary text-sm text-muted-foreground/80">
+          <p className="mt-3 font-secondary text-sm text-muted-foreground/90">
             Submit credentials for bespoke custody onboarding and concierge verification.
           </p>
         </div>
