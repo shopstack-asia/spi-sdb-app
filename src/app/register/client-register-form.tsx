@@ -10,75 +10,85 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Shield, User, Building2, Mail, Phone, Lock, MapPin, CalendarDays, Briefcase } from 'lucide-react';
-import { registerAction } from '@/lib/actions';
+import {
+  User,
+  Building2,
+  Mail,
+  Phone,
+  LockKeyhole,
+  MapPin,
+  CalendarDays,
+  Briefcase,
+} from 'lucide-react';
 import { toast } from 'sonner';
 
-const registrationSchema = z.object({
-  member_type: z.enum(["INDIVIDUAL", "CORPORATE"], {
-    message: "Please select a member type.",
-  }),
-  first_name: z.string().min(2, "First name must be at least 2 characters"),
-  last_name: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  address: z.string().min(5, "Address must be at least 5 characters"),
-  city: z.string().min(2, "City must be at least 2 characters"),
-  country: z.string().min(2, "Country must be at least 2 characters"),
-  postal_code: z.string().min(4, "Postal code must be at least 4 characters"),
-  date_of_birth: z.string().optional(), // Optional for corporate
-  occupation: z.string().optional(), // Optional for corporate
-  company_name: z.string().optional(), // Optional for individual
-}).superRefine((data, ctx) => {
-  if (data.member_type === "INDIVIDUAL") {
-    if (!data.date_of_birth) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Date of birth is required for individual members.",
-        path: ['date_of_birth'],
-      });
+const registrationSchema = z
+  .object({
+    member_type: z.enum(['INDIVIDUAL', 'CORPORATE'], {
+      message: 'Please select a member type.',
+    }),
+    first_name: z.string().min(2, 'First name must be at least 2 characters'),
+    last_name: z.string().min(2, 'Last name must be at least 2 characters'),
+    email: z.string().email('Please enter a valid email address'),
+    phone: z.string().min(10, 'Phone number must be at least 10 digits'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    address: z.string().min(5, 'Address must be at least 5 characters'),
+    city: z.string().min(2, 'City must be at least 2 characters'),
+    country: z.string().min(2, 'Country must be at least 2 characters'),
+    postal_code: z.string().min(4, 'Postal code must be at least 4 characters'),
+    date_of_birth: z.string().optional(),
+    occupation: z.string().optional(),
+    company_name: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.member_type === 'INDIVIDUAL') {
+      if (!data.date_of_birth) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Date of birth is required for individual members.',
+          path: ['date_of_birth'],
+        });
+      }
+      if (!data.occupation) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Occupation is required for individual members.',
+          path: ['occupation'],
+        });
+      }
+    } else if (data.member_type === 'CORPORATE') {
+      if (!data.company_name) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Company name is required for corporate members.',
+          path: ['company_name'],
+        });
+      }
     }
-    if (!data.occupation) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Occupation is required for individual members.",
-        path: ['occupation'],
-      });
-    }
-  } else if (data.member_type === "CORPORATE") {
-    if (!data.company_name) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Company name is required for corporate members.",
-        path: ['company_name'],
-      });
-    }
-  }
-});
+  });
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
 
 export default function ClientRegisterForm() {
-  const [memberType, setMemberType] = useState<"INDIVIDUAL" | "CORPORATE">("INDIVIDUAL");
+  const [memberType, setMemberType] = useState<'INDIVIDUAL' | 'CORPORATE'>('INDIVIDUAL');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
     defaultValues: {
-      member_type: "INDIVIDUAL",
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      password: "",
-      address: "",
-      city: "",
-      country: "",
-      postal_code: "",
-      date_of_birth: "",
-      occupation: "",
-      company_name: "",
+      member_type: 'INDIVIDUAL',
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone: '',
+      password: '',
+      address: '',
+      city: '',
+      country: '',
+      postal_code: '',
+      date_of_birth: '',
+      occupation: '',
+      company_name: '',
     },
   });
 
@@ -87,8 +97,7 @@ export default function ClientRegisterForm() {
 
     try {
       console.log('🟡 Client Register - Submitting:', data);
-      
-      // Call Next.js API route instead of server action
+
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -101,13 +110,11 @@ export default function ClientRegisterForm() {
       console.log('🟡 Client Register - Result:', result);
       console.log('🟡 Client Register - Response Status:', response.status);
       console.log('🟡 Client Register - Response OK:', response.ok);
-      
+
       if (result.success) {
         console.log('🟢 Registration successful, showing toast and redirecting...');
         toast.success(result.message);
-        // Reset form on success
         form.reset();
-        // Redirect to login after success
         setTimeout(() => {
           console.log('🔄 Redirecting to login page...');
           window.location.href = '/login';
@@ -117,49 +124,54 @@ export default function ClientRegisterForm() {
         toast.error(result.error);
       }
     } catch (error) {
-      console.error("Client-side registration error:", error);
-      toast.error("Registration failed. Please try again.");
+      console.error('Client-side registration error:', error);
+      toast.error('Registration failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Card className="bg-white/10 border-spi-silver/20 backdrop-blur-sm text-white">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-white">Create Your Account</CardTitle>
-        <CardDescription className="text-spi-silver">
-          Join SPI Safe Deposit for secure and intelligent storage solutions.
+    <Card className="border-qv-chrome/30 bg-surface/85 text-foreground shadow-qv-soft">
+      <CardHeader className="space-y-3 text-center">
+        <CardTitle className="font-primary text-sm tracking-[0.3em] text-secondary-foreground">
+          Establish Membership
+        </CardTitle>
+        <CardDescription className="font-secondary text-xs text-muted-foreground/80">
+          Enter the credentials required for bespoke custodial access.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
             <FormField
               control={form.control}
               name="member_type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Member Type</FormLabel>
-                  <Select onValueChange={(value: "INDIVIDUAL" | "CORPORATE") => {
-                    field.onChange(value);
-                    setMemberType(value);
-                  }} defaultValue={field.value}>
+                  <FormLabel>Member Type</FormLabel>
+                  <Select
+                    onValueChange={(value: 'INDIVIDUAL' | 'CORPORATE') => {
+                      field.onChange(value);
+                      setMemberType(value);
+                    }}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <SelectTrigger className="bg-spi-dark/50 border-spi-silver/30 text-white focus:ring-spi-gold">
+                      <SelectTrigger>
                         <SelectValue placeholder="Select a member type" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-spi-dark border-spi-silver/30 text-white">
+                    <SelectContent>
                       <SelectItem value="INDIVIDUAL">
-                        <div className="flex items-center">
-                          <User className="mr-2 h-4 w-4" /> Individual
-                        </div>
+                        <span className="flex items-center gap-2 font-secondary text-sm">
+                          <User className="h-4 w-4 text-qv-gold/70" /> Individual
+                        </span>
                       </SelectItem>
                       <SelectItem value="CORPORATE">
-                        <div className="flex items-center">
-                          <Building2 className="mr-2 h-4 w-4" /> Corporate
-                        </div>
+                        <span className="flex items-center gap-2 font-secondary text-sm">
+                          <Building2 className="h-4 w-4 text-qv-gold/70" /> Corporate
+                        </span>
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -168,15 +180,15 @@ export default function ClientRegisterForm() {
               )}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="first_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">First Name</FormLabel>
+                    <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John" {...field} className="bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                      <Input placeholder="John" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -187,9 +199,9 @@ export default function ClientRegisterForm() {
                 name="last_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Last Name</FormLabel>
+                    <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Doe" {...field} className="bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                      <Input placeholder="Doe" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -202,43 +214,11 @@ export default function ClientRegisterForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Email Address</FormLabel>
+                  <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-spi-silver" />
-                      <Input type="email" placeholder="john.doe@example.com" {...field} className="pl-10 bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Phone Number</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-spi-silver" />
-                      <Input type="tel" placeholder="+1234567890" {...field} className="pl-10 bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white">Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-spi-silver" />
-                      <Input type="password" placeholder="********" {...field} className="pl-10 bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                      <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                      <Input type="email" placeholder="john.doe@example.com" className="pl-11" {...field} />
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -246,17 +226,51 @@ export default function ClientRegisterForm() {
               )}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                      <Input type="tel" placeholder="+66 0000 0000" className="pl-11" {...field} />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Secure Passphrase</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                      <Input type="password" placeholder="********" className="pl-11" {...field} />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="address"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white">Address</FormLabel>
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>Address</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <MapPin className="absolute left-3 top-3 h-4 w-4 text-spi-silver" />
-                        <Textarea placeholder="123 Main St" {...field} className="pl-10 bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                        <MapPin className="pointer-events-none absolute left-4 top-4 h-4 w-4 text-qv-gold/70" />
+                        <Textarea placeholder="123 Private Vault Lane" className="pl-11" {...field} />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -268,9 +282,9 @@ export default function ClientRegisterForm() {
                 name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">City</FormLabel>
+                    <FormLabel>City</FormLabel>
                     <FormControl>
-                      <Input placeholder="New York" {...field} className="bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                      <Input placeholder="Bangkok" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -281,9 +295,9 @@ export default function ClientRegisterForm() {
                 name="country"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Country</FormLabel>
+                    <FormLabel>Country</FormLabel>
                     <FormControl>
-                      <Input placeholder="USA" {...field} className="bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                      <Input placeholder="Thailand" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -294,9 +308,9 @@ export default function ClientRegisterForm() {
                 name="postal_code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Postal Code</FormLabel>
+                    <FormLabel>Postal Code</FormLabel>
                     <FormControl>
-                      <Input placeholder="10001" {...field} className="bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                      <Input placeholder="10110" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -304,21 +318,19 @@ export default function ClientRegisterForm() {
               />
             </div>
 
-            {memberType === "INDIVIDUAL" && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {memberType === 'INDIVIDUAL' && (
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="date_of_birth"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Date of Birth</FormLabel>
+                      <FormLabel>Date of Birth</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="date" 
-                          {...field} 
-                          className="bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold"
-                          style={{ colorScheme: 'dark' }}
-                        />
+                        <div className="relative">
+                          <CalendarDays className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                          <Input type="date" className="pl-11" {...field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -329,11 +341,11 @@ export default function ClientRegisterForm() {
                   name="occupation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Occupation</FormLabel>
+                      <FormLabel>Occupation</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-spi-silver" />
-                          <Input placeholder="Engineer" {...field} className="pl-10 bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                          <Briefcase className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                          <Input placeholder="Principal" className="pl-11" {...field} />
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -343,17 +355,17 @@ export default function ClientRegisterForm() {
               </div>
             )}
 
-            {memberType === "CORPORATE" && (
+            {memberType === 'CORPORATE' && (
               <FormField
                 control={form.control}
                 name="company_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-white">Company Name</FormLabel>
+                    <FormLabel>Company Name</FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-spi-silver" />
-                        <Input placeholder="SPI Corp" {...field} className="pl-10 bg-spi-dark/50 border-spi-silver/30 text-white focus:border-spi-gold" />
+                        <Building2 className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
+                        <Input placeholder="Quantum Holdings" className="pl-11" {...field} />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -362,11 +374,7 @@ export default function ClientRegisterForm() {
               />
             )}
 
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-spi-gold hover:bg-spi-gold/90 text-spi-navy disabled:opacity-50"
-            >
+            <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? 'Creating Account...' : 'Register'}
             </Button>
           </form>

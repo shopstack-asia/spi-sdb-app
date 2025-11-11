@@ -3,48 +3,52 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222.2 84% 4.9%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96%;
-  --accent-foreground: 222.2 84% 4.9%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-  --radius: 0.5rem;
+  --background: 206 76% 8%;
+  --foreground: 38 23% 92%;
+  --surface: 206 64% 12%;
+  --surface-contrast: 38 23% 90%;
+  --card: 206 64% 12%;
+  --card-foreground: 38 23% 92%;
+  --popover: 206 64% 10%;
+  --popover-foreground: 38 23% 92%;
+  --primary: 206 76% 23%;
+  --primary-foreground: 38 23% 92%;
+  --secondary: 38 23% 45%;
+  --secondary-foreground: 206 76% 13%;
+  --muted: 200 3% 59%;
+  --muted-foreground: 38 10% 80%;
+  --accent: 38 23% 45%;
+  --accent-foreground: 206 76% 13%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 10%;
+  --border: 200 3% 59%;
+  --input: 200 3% 59%;
+  --ring: 38 23% 45%;
+  --radius: 0.75rem;
+  --font-primary: 'AUSGEN', 'Poppins', sans-serif;
+  --font-secondary: 'Anantason Reno', 'Noto Sans Thai', sans-serif;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
+  --background: 206 76% 10%;
+  --foreground: 38 23% 92%;
+  --card: 206 64% 14%;
+  --card-foreground: 38 23% 92%;
+  --popover: 206 64% 12%;
+  --popover-foreground: 38 23% 92%;
+  --primary: 38 23% 55%;
+  --primary-foreground: 206 76% 10%;
+  --secondary: 200 3% 59%;
+  --secondary-foreground: 206 76% 10%;
+  --muted: 200 3% 45%;
+  --muted-foreground: 38 10% 80%;
+  --accent: 38 23% 45%;
+  --accent-foreground: 206 76% 10%;
+  --destructive: 0 63% 40%;
+  --destructive-foreground: 0 0% 92%;
+  --border: 200 3% 45%;
+  --input: 200 3% 45%;
+  --ring: 38 23% 45%;
 }
 
 * {
@@ -52,7 +56,99 @@
 }
 
 body {
-  background-color: hsl(var(--background));
+  background:
+    radial-gradient(circle at 20% 20%, hsla(38, 23%, 45%, 0.08), transparent 55%),
+    radial-gradient(circle at 80% 0%, hsla(206, 76%, 23%, 0.25), transparent 50%),
+    hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-secondary);
+  letter-spacing: 0.01em;
+}
+
+.font-primary {
+  font-family: var(--font-primary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.font-secondary {
+  font-family: var(--font-secondary);
+}
+
+.luxury-divider {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.luxury-divider::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: 50%;
+  bottom: 0;
+  width: 5rem;
+  height: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsla(38, 23%, 45%, 0.2) 10%,
+    hsla(38, 23%, 45%, 0.65) 50%,
+    hsla(38, 23%, 45%, 0.2) 90%,
+    transparent 100%
+  );
+}
+
+.quantum-curve {
+  position: relative;
+  overflow: hidden;
+}
+
+.quantum-curve::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 120% at 120% 10%, hsla(38, 23%, 45%, 0.2) 0%, transparent 55%),
+    radial-gradient(100% 120% at 0% 100%, hsla(206, 76%, 23%, 0.18) 0%, transparent 60%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.seed-pod-pattern {
+  position: relative;
+  overflow: hidden;
+}
+
+.seed-pod-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 25% 25%, hsla(38, 23%, 45%, 0.16) 0, hsla(38, 23%, 45%, 0.08) 2px, transparent 3px),
+    radial-gradient(circle at 75% 75%, hsla(206, 76%, 23%, 0.16) 0, hsla(206, 76%, 23%, 0.06) 3px, transparent 4px);
+  background-size: 140px 140px, 220px 220px;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.golden-outline {
+  position: relative;
+}
+
+.golden-outline::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, hsla(38, 23%, 45%, 0.85), hsla(206, 76%, 23%, 0.35));
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 1px;
+  pointer-events: none;
 }

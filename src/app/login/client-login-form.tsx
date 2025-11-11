@@ -8,12 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Shield, Mail, Lock } from 'lucide-react';
+import { Mail, LockKeyhole } from 'lucide-react';
 import { toast } from 'sonner';
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -24,8 +24,8 @@ export default function ClientLoginForm() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -34,8 +34,7 @@ export default function ClientLoginForm() {
 
     try {
       console.log('🟡 Client Login - Submitting:', data);
-      
-      // Call Next.js API route instead of server action
+
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -48,12 +47,11 @@ export default function ClientLoginForm() {
       console.log('🟡 Client Login - Result:', result);
       console.log('🟡 Client Login - Response Status:', response.status);
       console.log('🟡 Client Login - Response OK:', response.ok);
-      
+
       if (result.success) {
         console.log('🟢 Login successful, redirecting to member dashboard...');
         console.log('🔵 Client - Response data:', result.data);
         toast.success('Login successful!');
-        // Wait for cookies to be set, then redirect
         setTimeout(() => {
           console.log('🔄 Redirecting to member dashboard...');
           window.location.href = '/member';
@@ -63,26 +61,21 @@ export default function ClientLoginForm() {
         toast.error(result.error || 'Login failed. Please try again.');
       }
     } catch (error) {
-      console.error("Client-side login error:", error);
-      toast.error("Login failed. Please try again.");
+      console.error('Client-side login error:', error);
+      toast.error('Login failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Card className="bg-white/10 border-spi-silver/20 backdrop-blur-sm">
-      <CardHeader className="text-center">
-        <div className="flex justify-center mb-4">
-          <div className="p-3 bg-spi-gold/20 rounded-full">
-            <Shield className="h-8 w-8 text-spi-gold" />
-          </div>
-        </div>
-        <CardTitle className="text-2xl font-bold text-white">
-          Welcome Back
+    <Card className="border-qv-chrome/30 bg-surface/85 shadow-qv-soft">
+      <CardHeader className="space-y-3 text-center">
+        <CardTitle className="font-primary text-sm tracking-[0.3em] text-secondary-foreground">
+          Vault Entry Verification
         </CardTitle>
-        <CardDescription className="text-spi-silver">
-          Sign in to your SPI Safe Deposit account
+        <CardDescription className="font-secondary text-xs text-muted-foreground/80">
+          Credentials remain encrypted within the Quantum Vault perimeter.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -93,15 +86,15 @@ export default function ClientLoginForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Email Address</FormLabel>
+                  <FormLabel>Email Address</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-spi-silver" />
+                      <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
                       <Input
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder="member@quantumvault.com"
+                        className="pl-11"
                         {...field}
-                        className="pl-10 bg-white/10 border-spi-silver/20 text-white placeholder:text-spi-silver"
                       />
                     </div>
                   </FormControl>
@@ -115,15 +108,15 @@ export default function ClientLoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Password</FormLabel>
+                  <FormLabel>Secure Passphrase</FormLabel>
                   <FormControl>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-spi-silver" />
+                      <LockKeyhole className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-qv-gold/70" />
                       <Input
                         type="password"
-                        placeholder="Enter your password"
+                        placeholder="••••••••"
+                        className="pl-11"
                         {...field}
-                        className="pl-10 bg-white/10 border-spi-silver/20 text-white placeholder:text-spi-silver"
                       />
                     </div>
                   </FormControl>
@@ -132,18 +125,17 @@ export default function ClientLoginForm() {
               )}
             />
 
-            <div className="flex items-center justify-between">
-              <a href="/forgot-password" className="text-spi-silver hover:text-white text-sm">
-                Forgot your password?
+            <div className="text-right">
+              <a
+                href="/forgot-password"
+                className="font-primary text-[0.62rem] uppercase tracking-[0.28em] text-muted-foreground/70 hover:text-primary"
+              >
+                Reset Credentials
               </a>
             </div>
 
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-spi-gold hover:bg-spi-gold/90 text-spi-navy disabled:opacity-50"
-            >
-              {isSubmitting ? 'Signing In...' : 'Sign In'}
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting ? 'Authorising...' : 'Enter Vault'}
             </Button>
           </form>
         </Form>
