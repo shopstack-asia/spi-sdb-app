@@ -146,10 +146,10 @@ export default function Home() {
               </p>
               <div className="space-y-4">
                 <p className="font-primary text-sm tracking-[0.32em] text-secondary">
-                  Trust Beyond Time
+                  Privacy Security Trust
                 </p>
                 <p className="font-secondary text-base text-muted-foreground/80">
-                  ปกป้องเหนือกาลเวลา
+                  ความเป็นส่วนตัวเหนือระดับ • ความปลอดภัยขั้นสูง • ความเชื่อถือที่ไร้ขีดจำกัด
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -317,10 +317,10 @@ export default function Home() {
             />
             <div>
               <p className="font-primary text-[0.6rem] tracking-[0.3em] text-secondary">
-                Trust Beyond Time
+                Privacy Security Trust
               </p>
               <p className="font-secondary text-xs text-muted-foreground/80">
-                ปกป้องเหนือกาลเวลา
+                ความเป็นส่วนตัวเหนือระดับ • ความปลอดภัยขั้นสูง • ความเชื่อถือที่ไร้ขีดจำกัด
               </p>
             </div>
           </div>
