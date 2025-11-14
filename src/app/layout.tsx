@@ -18,7 +18,7 @@ const secondaryFont = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: "Quantum Vault | Trust Beyond Time",
+  title: "Quantum Vault | Privacy Security Trust",
   description:
     "Quantum Vault delivers ultra-secure safe deposit suites, concierge-grade service, and timeless discretion for your most precious assets.",
   keywords: [
